@@ -1,6 +1,6 @@
-wybrane-zagadnienia-algebry
-===========================
-Lista omówionych algorytmów:
+#Wybrane zagadnienia algebry#
+##Przegląd wybranych generatorów liczb pseudolosowych##
+(planowana) Lista omówionych algorytmów:
 * Blum Blum Shub
 * Wichmann-Hill
 * Complementary-multiply-with-carry
