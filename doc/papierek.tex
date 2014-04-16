@@ -66,15 +66,13 @@
 \author{
 \large
 \textsc{Mateusz Sołtysik, Andrzej Kwak, Wiktor Dyngosz} \vspace{2mm} \\ % Your name
-\normalsize Politechnika Wrocławska, Wydział podstawowych problemów techniki \vspace{2mm} \\ % Your institution
+\normalsize Politechnika Wrocławska, Wydział Podstawowych Problemów Techniki \vspace{2mm} \\ % Your institution
 \normalsize
 \href{mailto:mateusz@soltysik.org}{mateusz@soltysik.org} \hspace{1mm} % Your email address
 \href{mailto:andrzej@kwak.re}{andrzej@kwak.re} \hspace{1mm} % Your email address
-\href{mailto:wiktor.dyngosz@gmail.com}{wiktor.dyngosz@gmail.com} % Your email address
-\vspace{-5mm}
+\href{mailto:wiktor.dyngosz@gmail.com}{wiktor.dyngosz@gmail.com} \\ % Your email address
 }
-\date{}
-
+\date{Prowadzący: dr Krzysztof Majcher.}
 %----------------------------------------------------------------------------------------
 
 \begin{document}
@@ -89,8 +87,9 @@
 
 \begin{abstract}
 
-\noindent \lipsum[1] % Dummy abstract text
-
+\noindent W pracy dokonano przeglądu generatorów liczb losowych oraz zaprezentowano ich implementację w języku JAVA. 
+\\Abstrakt pisze się na końcu. 
+\url{http://texterbooks.com/do/content/jak_napisac_dobry_abstrakt}
 \end{abstract}
 
 %----------------------------------------------------------------------------------------
@@ -99,10 +98,28 @@
 
 \begin{multicols}{2} % Two-column layout throughout the main article text
 
-\section{Introduction}
+\section{Wstęp}
 
-\lettrine[nindent=0em,lines=3]{L} orem ipsum dolor sit amet, consectetur adipiscing elit.
-\lipsum[2-3] % Dummy text
+\lettrine[nindent=0em,lines=3]{T}ermin generator liczb pseudolosowych odnosi się do układu elektronicznego lub programu komputerowego, który na podstawie niewielkiej ilości informacji (ziarna, ang. seed) generuje deterministycznie ciąg bitów. Ciąg ten pod pewnymi względami jest nieodróżnialny od ciągu uzyskanego z prawdziwie losowego źródła. W pracy będziemy chcieli przedstawić 16 algorytmów, służących generowaniu liczb pseudolosowych:
+\begin{compactitem}
+\item Blum Blum Shub (Mateusz)
+\item Wichmann-Hill (Andrzej)
+\item Complementary-multiply-with-carry (Wiktor)
+\item Inversive congruential generator (Mateusz)
+\item ISAAC (cipher) (Andrzej)
+\item Lagged Fibonacci generator (Wiktor)
+\item Linear congruential generator (Mateusz)
+\item Linear feedback shift register (Andrzej)
+\item Maximal periodic reciprocals (Wiktor)
+\item Mersenne twister (Mateusz)
+\item Multiply-with-carry (Andrzej)
+\item Naor-Reingold Pseudorandom Function (Wiktor)
+\item Park–Miller random number generator (Mateusz)
+\item RC4 PRGA (Andrzej)
+\item Well Equidistributed Long-period Linear (Wiktor)
+\item Xorshift (Mateusz)
+\end{compactitem}
+
 
 %------------------------------------------------
 
