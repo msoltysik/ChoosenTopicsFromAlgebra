@@ -36,7 +36,11 @@
 \usepackage{booktabs} % Horizontal rules in tables
 \usepackage{float} % Required for tables and figures in the multi-column environment - they need to be placed in specific locations with the [H] (e.g. \begin{table}[H])
 \usepackage{hyperref} % For hyperlinks in the PDF
-
+\hypersetup{ 
+unicode=true,
+pdfnewwindow=true,
+hidelinks
+}
 \usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
 \usepackage{paralist} % Used for the compactitem environment which makes bullet points with less space between them
 
@@ -54,7 +58,7 @@
 \pagestyle{fancy} % All pages have headers and footers
 \fancyhead{} % Blank out the default header
 \fancyfoot{} % Blank out the default footer
-\fancyhead[C]{Wybrane zagadnienia algebry $\bullet$ Czerwiec 2014 $\bullet$ Vol. I, No. 1} % Custom header text
+\fancyhead[C]{Wybrane zagadnienia algebry $\bullet$ Czerwiec 2014 $\bullet$ Prowadzący: dr Krzysztof Majcher} % Custom header text
 \fancyfoot[RO,LE]{\thepage} % Custom footer text
 
 %----------------------------------------------------------------------------------------
@@ -72,7 +76,7 @@
 \href{mailto:andrzej@kwak.re}{andrzej@kwak.re} \hspace{1mm} % Your email address
 \href{mailto:wiktor.dyngosz@gmail.com}{wiktor.dyngosz@gmail.com} \\ % Your email address
 }
-\date{Prowadzący: dr Krzysztof Majcher.}
+\date{}
 %----------------------------------------------------------------------------------------
 
 \begin{document}
