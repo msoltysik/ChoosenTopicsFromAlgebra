@@ -2,19 +2,18 @@ package algorithms;
 
 @SuppressWarnings("UnusedDeclaration")
 
-public class Xorshift {
-    private static final long max = ((long) 2 << 30) - 1;
+public class LinearCongruentialGenerator {
+    private final static long a = 25173;
+    private final static long b = 13849;
+    private final static long m = 32768;
     private static long seed = System.currentTimeMillis() + System.identityHashCode(new Object());
 
     /**
      * @return pseudo-random number from 0 to max.
      */
     public static long getRandomNumber() {
-        seed ^= seed >> 12;
-        seed ^= seed << 25;
-        seed ^= seed >> 27;
-        seed = (seed * 2685821657736338717L) % max;
-        return Math.abs(seed);
+        seed = (a * seed + b) % m;
+        return seed;
     }
 
     /**
@@ -22,8 +21,8 @@ public class Xorshift {
      * @return pseudo-random number from 0 to maxValue.
      */
     public static long getRandomNumber(long maxValue) {
-        long randomNumber = getRandomNumber();
-        return randomNumber % (maxValue + 1);
+        seed = getRandomNumber();
+        return seed % (maxValue + 1);
     }
 
     /**
@@ -32,7 +31,9 @@ public class Xorshift {
      * @return pseudo-random number between minValue and maxValue.
      */
     public static long getRandomNumber(long minValue, long maxValue) {
-        long randomNumber = getRandomNumber();
-        return minValue + (randomNumber % (maxValue - minValue + 1));
+        seed = getRandomNumber();
+        return minValue + (seed % (maxValue - minValue + 1));
     }
+
+
 }
