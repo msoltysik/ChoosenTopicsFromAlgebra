@@ -2,12 +2,12 @@ package algorithms;
 
 @SuppressWarnings("UnusedDeclaration")
 
-public class Xorshift {
+public abstract class Xorshift {
     private static final long max = ((long) 2 << 30) - 1;
     private static long seed = System.currentTimeMillis() + System.identityHashCode(new Object());
 
     /**
-     * @return pseudo-random number from 0 to max.
+     * @return pseudo-random number between 0 and max.
      */
     public static long getRandomNumber() {
         seed ^= seed >> 12;
@@ -19,7 +19,7 @@ public class Xorshift {
 
     /**
      * @param maxValue maximum value which the function can return.
-     * @return pseudo-random number from 0 to maxValue.
+     * @return pseudo-random number between 0 and maxValue param.
      */
     public static long getRandomNumber(long maxValue) {
         long randomNumber = getRandomNumber();
@@ -29,7 +29,7 @@ public class Xorshift {
     /**
      * @param minValue minimum value which the function can return.
      * @param maxValue maximum value which the function can return.
-     * @return pseudo-random number between minValue and maxValue.
+     * @return pseudo-random number between minValue and maxValue param.
      */
     public static long getRandomNumber(long minValue, long maxValue) {
         long randomNumber = getRandomNumber();
