@@ -1,13 +1,13 @@
 package algorithms;
 
 @SuppressWarnings("UnusedDeclaration")
-public class BlumBlumShub {
+public abstract class BlumBlumShub {
     private static final int p = 11;
     private static final int q = 19;
     private static long seed = System.currentTimeMillis() + System.identityHashCode(new Object());
 
     /**
-     * @return pseudo-random number between minValue and maxValue.
+     * @return pseudo-random number between .
      */
     public static long getRandomNumber() {
         seed = (seed * seed % (p * q));
@@ -16,7 +16,7 @@ public class BlumBlumShub {
 
     /**
      * @param maxValue maximum value which the function can return.
-     * @return pseudo-random number between minValue and maxValue.
+     * @return pseudo-random number between 0 and maxValue.
      */
     public static long getRandomNumber(long maxValue) {
         long randomNumber = getRandomNumber();
@@ -26,7 +26,7 @@ public class BlumBlumShub {
     /**
      * @param minValue minimum value which the function can return.
      * @param maxValue maximum value which the function can return.
-     * @return pseudo-random number between minValue and maxValue.
+     * @return pseudo-random number between minValue param and maxValue param.
      */
     public static long getRandomNumber(long minValue, long maxValue) {
         long randomNumber = getRandomNumber();

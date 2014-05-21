@@ -2,7 +2,7 @@ package algorithms;
 
 @SuppressWarnings("ALL")
 
-public class ParkMiller {
+public abstract class ParkMiller {
     private static final long max = ((long) 2 << 30) - 1;
     private static final long a = 16807;
     private static long seed = System.currentTimeMillis() + System.identityHashCode(new Object());
