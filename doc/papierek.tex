@@ -1,13 +1,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Journal Article
+% Thin Sectioned Essay
 % LaTeX Template
-% Version 1.3 (9/9/13)
+% Version 1.0 (3/8/13)
 %
 % This template has been downloaded from:
 % http://www.LaTeXTemplates.com
 %
-% Original author:
-% Frits Wenneker (http://www.howtotex.com)
+% Original Author:
+% Nicolas Diaz (nsdiaz@uc.cl) with extensive modifications by:
+% Vel (vel@latextemplates.com)
 %
 % License:
 % CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -18,185 +19,159 @@
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
-\documentclass[twoside]{article}
+\documentclass[a4paper, 11pt]{article} % Font size (can be 10pt, 11pt or 12pt) and paper size (remove a4paper for US letter paper)
 
-\usepackage{polski}
+\usepackage[protrusion=true,expansion=true]{microtype} % Better typography
+\usepackage{graphicx} % Required for including pictures
+\usepackage{wrapfig} % Allows in-line images
+\usepackage{listings}             % Include the listings-package
 \usepackage[utf8]{inputenc}
+\usepackage{mathpazo} % Use the Palatino font
+\usepackage[T1]{fontenc} % Required for accented characters
+\linespread{1.05} % Change line spacing here, Palatino benefits from a slight increase by default
+\usepackage{color}
+\makeatletter
+\renewcommand\@biblabel[1]{\textbf{#1.}} % Change the square brackets for each bibliography item from '[1]' to '1.'
+\renewcommand{\@listI}{\itemsep=0pt} % Reduce the space between items in the itemize and enumerate environments and the bibliography
 
-\usepackage{lipsum} % Package to generate dummy text throughout this template
+\lstset{numbers=left, frame=single,}
 
-\usepackage[sc]{mathpazo} % Use the Palatino font
-\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
-\linespread{1.05} % Line spacing - Palatino needs more space between lines
-\usepackage{microtype} % Slightly tweak font spacing for aesthetics
-
-\usepackage[hmarginratio=1:1,top=32mm,columnsep=20pt]{geometry} % Document margins
-\usepackage{multicol} % Used for the two-column layout of the document
-\usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption} % Custom captions under/above floats in tables or figures
-\usepackage{booktabs} % Horizontal rules in tables
-\usepackage{float} % Required for tables and figures in the multi-column environment - they need to be placed in specific locations with the [H] (e.g. \begin{table}[H])
-\usepackage{hyperref} % For hyperlinks in the PDF
-\hypersetup{ 
-unicode=true,
-pdfnewwindow=true,
-hidelinks
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+ 
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
 }
-\usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
-\usepackage{paralist} % Used for the compactitem environment which makes bullet points with less space between them
 
-\usepackage{abstract} % Allows abstract customization
-\renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
-\renewcommand{\abstracttextfont}{\normalfont\small\itshape} % Set the abstract itself to small italic text
+\renewcommand{\maketitle}{ % Customize the title - do not edit title and author name here, see the TITLE block below
+\begin{flushright} % Right align
+{\LARGE\@title} % Increase the font size of the title
 
-\usepackage{titlesec} % Allows customization of titles
-\renewcommand\thesection{\Roman{section}} % Roman numerals for the sections
-\renewcommand\thesubsection{\Roman{subsection}} % Roman numerals for subsections
-\titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{} % Change the look of the section titles
-\titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{} % Change the look of the section titles
+\vspace{50pt} % Some vertical space between the title and author name
 
-\usepackage{fancyhdr} % Headers and footers
-\pagestyle{fancy} % All pages have headers and footers
-\fancyhead{} % Blank out the default header
-\fancyfoot{} % Blank out the default footer
-\fancyhead[C]{Wybrane zagadnienia algebry $\bullet$ Czerwiec 2014 $\bullet$ Prowadzący: dr Krzysztof Majcher} % Custom header text
-\fancyfoot[RO,LE]{\thepage} % Custom footer text
+{\large\@author} % Author name
+\\\@date % Date
+
+\vspace{40pt} % Some vertical space between the author block and abstract
+\end{flushright}
+}
 
 %----------------------------------------------------------------------------------------
-%	TITLE SECTION
+%	TITLE
 %----------------------------------------------------------------------------------------
 
-\title{\vspace{-15mm}\fontsize{24pt}{10pt}\selectfont\textbf{Przegląd wybranych generatorów liczb pseudolosowych}} % Article title
+\title{\textbf{Przegląd wybranych generatorów liczb pseudolosowych}\\ % Title
+i ich analiza pod kątem losowości.} % Subtitle
 
-\author{
-\large
-\textsc{Mateusz Sołtysik, Andrzej Kwak, Wiktor Dyngosz} \vspace{2mm} \\ % Your name
-\normalsize Politechnika Wrocławska, Wydział Podstawowych Problemów Techniki \vspace{2mm} \\ % Your institution
-\normalsize
-\href{mailto:mateusz@soltysik.org}{mateusz@soltysik.org} \hspace{1mm} % Your email address
-\href{mailto:andrzej@kwak.re}{andrzej@kwak.re} \hspace{1mm} % Your email address
-\href{mailto:wiktor.dyngosz@gmail.com}{wiktor.dyngosz@gmail.com} \\ % Your email address
-}
-\date{}
+\author{\textsc{Mateusz Sołtysik, Andrzej Kwak, Wiktor Dyngosz} % Author
+\\{Politechnika Wrocławska, \textit{Wydział Podstawowych Problemów Techniki}}} % Institution
+
+\date{\today} % Date
+
 %----------------------------------------------------------------------------------------
 
 \begin{document}
 
-\maketitle % Insert title
-
-\thispagestyle{fancy} % All pages have headers and footers
+\maketitle % Print the title section
 
 %----------------------------------------------------------------------------------------
-%	ABSTRACT
+%	ABSTRACT AND KEYWORDS
 %----------------------------------------------------------------------------------------
+
+%\renewcommand{\abstractname}{Summary} % Uncomment to change the name of the abstract to something else
 
 \begin{abstract}
-
-\noindent W pracy dokonano przeglądu generatorów liczb losowych oraz zaprezentowano ich implementację w języku JAVA. 
-\\Abstrakt pisze się na końcu. 
-\url{http://texterbooks.com/do/content/jak_napisac_dobry_abstrakt}
 \end{abstract}
 
-%----------------------------------------------------------------------------------------
-%	ARTICLE CONTENTS
-%----------------------------------------------------------------------------------------
+\hspace*{3,6mm}\textit{Keywords:} 
 
-\begin{multicols}{2} % Two-column layout throughout the main article text
+\vspace{30pt} % Some vertical space between the abstract and first section
 
-\section{Wstęp}
+\section*{Wstęp}
 
-\lettrine[nindent=0em,lines=3]{T}ermin generator liczb pseudolosowych odnosi się do układu elektronicznego lub programu komputerowego, który na podstawie niewielkiej ilości informacji (ziarna, ang. seed) generuje deterministycznie ciąg bitów. Ciąg ten pod pewnymi względami jest nieodróżnialny od ciągu uzyskanego z prawdziwie losowego źródła. W pracy będziemy chcieli przedstawić 16 algorytmów, służących generowaniu liczb pseudolosowych:
-\begin{compactitem}
-\item Blum Blum Shub (Mateusz)
-\item Wichmann-Hill (Andrzej)
-\item Complementary-multiply-with-carry (Wiktor)
-\item Inversive congruential generator (Mateusz)
-\item ISAAC (cipher) (Andrzej)
-\item Lagged Fibonacci generator (Wiktor)
-\item Linear congruential generator (Mateusz)
-\item Linear feedback shift register (Andrzej)
-\item Maximal periodic reciprocals (Wiktor)
-\item Mersenne twister (Mateusz)
-\item Multiply-with-carry (Andrzej)
-\item Naor-Reingold Pseudorandom Function (Wiktor)
-\item Park–Miller random number generator (Mateusz)
-\item RC4 PRGA (Andrzej)
-\item Well Equidistributed Long-period Linear (Wiktor)
-\item Xorshift (Mateusz)
-\end{compactitem}
+\section{Opis i analiza poszczególnych algorytmów}
+
+% Mati tutaj pisze
+\subsection{Blum Blum Shub}
+Algorytm Blum Blum Shub został zaproponowany przez Lenore Blum, Manuela Blum oraz Michaela Shub'a w pracy pt. "A Simple Unpredictable Pseudo-Random Number Generator"\footnote{http://epubs.siam.org/doi/abs/10.1137/0215025}.
+\begin{lstlisting}[style=mystyle, language=java, frame=single]
+private static final int p = 11;
+private static final int q = 19;
+
+public static long getRandomNumber() {
+    seed = (seed * seed) % (p * q);
+    return Math.abs(seed);
+}
+\end{lstlisting}
+
+\subsection{Linear congruential generator}
+\begin{lstlisting}[style=mystyle, language=java, frame=single]
+private final static long a = 25173;
+private final static long b = 13849;
+private final static long m = 32768;
+
+public static long getRandomNumber() {
+    seed = (a * seed + b) % m;
+    return seed;
+}
+\end{lstlisting}
+
+\subsection{Mersenne twister}
 
 
-%------------------------------------------------
+\subsection{Park–Miller random number generator}
 
-\section{Methods}
+\begin{lstlisting}[style=mystyle, language=java, frame=single]
+private static final long max = ((long) 2 << 30) - 1;
+private static final long a = 16807;
 
-Maecenas sed ultricies felis. Sed imperdiet dictum arcu a egestas. 
-\begin{compactitem}
-\item Donec dolor arcu, rutrum id molestie in, viverra sed diam
-\item Curabitur feugiat
-\item turpis sed auctor facilisis
-\item arcu eros accumsan lorem, at posuere mi diam sit amet tortor
-\item Fusce fermentum, mi sit amet euismod rutrum
-\item sem lorem molestie diam, iaculis aliquet sapien tortor non nisi
-\item Pellentesque bibendum pretium aliquet
-\end{compactitem}
-\lipsum[4] % Dummy text
+public static long getRandomNumber() {
+    seed = (a * seed) % max;
+    return seed;
+}
+\end{lstlisting}
 
-%------------------------------------------------
+\subsection{Xorshift}
+Algorytm został stworony przez George Marsaglia\footnote{http://www.jstatsoft.org/v08/i14/paper}. Zasada działania opiera się na generowaniu następnych numerów wielokrotnie biorąc różnicę symetryczną z niego i przesuniętej bitowo wersji tej liczby.
 
-\section{Results}
 
-\begin{table}[H]
-\caption{Example table}
-\centering
-\begin{tabular}{llr}
-\toprule
-\multicolumn{2}{c}{Name} \\
-\cmidrule(r){1-2}
-First name & Last Name & Grade \\
-\midrule
-John & Doe & $7.5$ \\
-Richard & Miles & $2$ \\
-\bottomrule
-\end{tabular}
-\end{table}
+\begin{lstlisting}[style=mystyle, language=java, frame=single]
+public static long getRandomNumber() {
+    seed ^= seed >> 12;
+    seed ^= seed << 25;
+    seed ^= seed >> 27;
+    seed = (seed * 2685821657736338717L) % max;
+    return Math.abs(seed);
+}
+\end{lstlisting}
 
-\lipsum[5] % Dummy text
-
-\begin{equation}
-\label{eq:emc}
-e = mc^2
-\end{equation}
-
-\lipsum[6] % Dummy text
-
-%------------------------------------------------
-
-\section{Discussion}
-
-\subsection{Subsection One}
-
-\lipsum[7] % Dummy text
-
-\subsection{Subsection Two}
-
-\lipsum[8] % Dummy text
+\section*{Wnioski}
 
 %----------------------------------------------------------------------------------------
-%	REFERENCE LIST
+%	BIBLIOGRAPHY
 %----------------------------------------------------------------------------------------
 
-\begin{thebibliography}{99} % Bibliography - this is intentionally simple in this template
+\bibliographystyle{unsrt}
 
-\bibitem[Figueredo and Wolf, 2009]{Figueredo:2009dg}
-Figueredo, A.~J. and Wolf, P. S.~A. (2009).
-\newblock Assortative pairing and life history strategy - a cross-cultural
-  study.
-\newblock {\em Human Nature}, 20:317--330.
- 
-\end{thebibliography}
+\bibliography{sample}
 
 %----------------------------------------------------------------------------------------
-
-\end{multicols}
 
 \end{document}
