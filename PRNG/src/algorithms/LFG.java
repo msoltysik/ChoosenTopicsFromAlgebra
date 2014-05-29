@@ -1,5 +1,7 @@
 package algorithms;
 
+@SuppressWarnings("ALL")
+
 public class LFG {
 	 
 	/* Definicje wspolczynnikow j, k oraz m */
@@ -74,39 +76,10 @@ public class LFG {
 		 
 		return result;
 	}
-	 
-	 
-	public static void main(String[] args) {
-		int ii, n, g;
-		long seed;
-		 
-		System.out.println("Podaj wartosc poczatkowa ziarna (seed)");
-		seed = Console.readLong("");
-		 
-		System.out.println("Podaj ile liczb pseudolosowych wylosowac");
-		n = Console.readInt("");
-		 
-		System.out.println("Podaj, ktory generator uzyc:");
+
+/*
 		System.out.println("1-ALFG - Addytywny Opozniony Generator Fibonacciego");
 		System.out.println("2-MLFG - Multiplikatywny Opozniony Generator Fibonacciego");
 		System.out.println("3-TGFSR - Dwupunktowy uogolniony rejestr przesuwny ze sprzezeniem zwrotnym");
-		g = Console.readInt("");
-		 
-		initX(seed);
-		switch (g){
-			case 1:
-				for (ii=0; ii<n; ii++)
-				System.out.println(genRandALFG());
-				break;
-			case 2:
-				for (ii=0; ii<n; ii++)
-				System.out.println(genRandMLFG());
-				break;
-			case 3:
-				for (ii=0; ii<n; ii++)
-				System.out.println(genRandTGFSR());
-				break;
-		}
-	}
-	 
+*/
 }

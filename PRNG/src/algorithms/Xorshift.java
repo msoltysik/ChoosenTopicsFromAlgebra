@@ -1,15 +1,26 @@
 package algorithms;
 
+import algorithms.interfaces.IGenerator;
+
 @SuppressWarnings("UnusedDeclaration")
 
-public abstract class Xorshift {
+public class Xorshift implements IGenerator {
     private static final long max = ((long) 2 << 30) - 1;
-    private static long seed = System.currentTimeMillis() + System.identityHashCode(new Object());
+    private long seed;
+
+    public Xorshift() {
+        seed = System.currentTimeMillis() + System.identityHashCode(new Object());
+    }
+
+    public Xorshift(long seed) {
+        this.seed = seed;
+    }
+
 
     /**
      * @return pseudo-random number between 0 and max.
      */
-    public static long getRandomNumber() {
+    public long getRandomNumber() {
         seed ^= seed >> 12;
         seed ^= seed << 25;
         seed ^= seed >> 27;
@@ -21,7 +32,7 @@ public abstract class Xorshift {
      * @param maxValue maximum value which the function can return.
      * @return pseudo-random number between 0 and maxValue param.
      */
-    public static long getRandomNumber(long maxValue) {
+    public long getRandomNumber(long maxValue) {
         long randomNumber = getRandomNumber();
         return randomNumber % (maxValue + 1);
     }
@@ -31,7 +42,7 @@ public abstract class Xorshift {
      * @param maxValue maximum value which the function can return.
      * @return pseudo-random number between minValue and maxValue param.
      */
-    public static long getRandomNumber(long minValue, long maxValue) {
+    public long getRandomNumber(long minValue, long maxValue) {
         long randomNumber = getRandomNumber();
         return minValue + (randomNumber % (maxValue - minValue + 1));
     }

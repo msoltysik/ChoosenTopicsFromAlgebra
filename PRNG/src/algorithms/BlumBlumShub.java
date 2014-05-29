@@ -1,7 +1,9 @@
 package algorithms;
 
+import algorithms.interfaces.IGenerator;
+
 @SuppressWarnings("UnusedDeclaration")
-public abstract class BlumBlumShub {
+public class BlumBlumShub implements IGenerator {
     private static final int p = 11;
     private static final int q = 19;
     private static long seed = System.currentTimeMillis() + System.identityHashCode(new Object());
@@ -9,7 +11,7 @@ public abstract class BlumBlumShub {
     /**
      * @return pseudo-random number between .
      */
-    public static long getRandomNumber() {
+    public long getRandomNumber() {
         seed = (seed * seed % (p * q));
         return Math.abs(seed);
     }
@@ -18,7 +20,7 @@ public abstract class BlumBlumShub {
      * @param maxValue maximum value which the function can return.
      * @return pseudo-random number between 0 and maxValue.
      */
-    public static long getRandomNumber(long maxValue) {
+    public long getRandomNumber(long maxValue) {
         long randomNumber = getRandomNumber();
         return randomNumber % (maxValue + 1);
     }
@@ -28,7 +30,7 @@ public abstract class BlumBlumShub {
      * @param maxValue maximum value which the function can return.
      * @return pseudo-random number between minValue param and maxValue param.
      */
-    public static long getRandomNumber(long minValue, long maxValue) {
+    public long getRandomNumber(long minValue, long maxValue) {
         long randomNumber = getRandomNumber();
         return minValue + (randomNumber % (maxValue - minValue + 1));
     }

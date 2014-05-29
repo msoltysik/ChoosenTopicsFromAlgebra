@@ -1,8 +1,10 @@
 package algorithms;
 
+import algorithms.interfaces.IGenerator;
+
 @SuppressWarnings("UnusedDeclaration")
 
-public abstract class MersenneTwister {
+public class MersenneTwister implements IGenerator {
     private static int[] MT = new int[624];
     private static int index = 0;
     private static boolean initialized = false;
@@ -25,7 +27,7 @@ public abstract class MersenneTwister {
         initialized = true;
     }
 
-    public static int extractNumber() {
+    public long getRandomNumber() {
         if (!initialized) {
             initializeGenerator();
         }
@@ -53,5 +55,16 @@ public abstract class MersenneTwister {
                 MT[i] = (int) (MT[i] ^ 2567483615L);
             }
         }
+    }
+
+
+    public long getRandomNumber(long maxValue) {
+        long randomNumber = getRandomNumber();
+        return randomNumber % (maxValue + 1);
+    }
+
+    public long getRandomNumber(long minValue, long maxValue) {
+        long randomNumber = getRandomNumber();
+        return minValue + (randomNumber % (maxValue - minValue + 1));
     }
 }

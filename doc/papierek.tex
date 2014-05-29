@@ -100,17 +100,42 @@ i ich analiza pod kątem losowości.} % Subtitle
 \begin{abstract}
 \end{abstract}
 
-\hspace*{3,6mm}\textit{Keywords:} 
+\hspace*{3,6mm}\textit{Keywords:PRGN,  $\chi^2$} 
 
 \vspace{30pt} % Some vertical space between the abstract and first section
 
 \section*{Wstęp}
+Pseudo-Random Number Generator, PRNG) – program, który na podstawie niewielkiej ilości informacji (ziarna, ang. seed) generuje deterministycznie „potencjalnie nieskończony” ciąg
+bitów, który pod pewnymi względami jest podobny o ciągu uzyskanego z prawdziwie losowego źródła. Generowane ciągi nie są całkiem losowe: jeśli ziarno jest reprezentowane przez k bitów informacji, to generator może wygenerować n-bitowy ciąg jedynie na $2^k$ sposobów spośród $2^n$ możliwych.
+Pożądane cechy generatorów trudne do ustalenia ziarno, choć znany jest ciąg wygenerowanych bitów, trudne do ustalenia kolejno generowane bity, choć znany jest ciąg bitów dotychczas wygenerowanych 
+\\1. Jednorodność. W każdym punkcie generowanego ciągu bitów prawdopodobieństwo wystąpienia jedynki lub zera jest takie samo i wynosi 1/2, oczekiwana liczba zer w całym ciągu wynosi około n/2 dla ciągu n bitów.
+\\2. Skalowalność. Każdy podciąg ciągu bitów, który uzyskał pozytywny wynik testu jakości, poddany temu samemu testowi powinien również uzyskać wynik pozytywny.
+\\3. Zgodność. Zachowanie generatora musi dawać podobne rezultaty niezależnie od początkowej wartości lub fizycznego zjawiska będącego źródłem „losowości”.
 
-\section{Opis i analiza poszczególnych algorytmów}
+%----------------------------------------------------------------------------------------
+\section{Opis i analiza algorytmów PRNG}
+\subsection*{Informacje wstępne}
+Seed (pl Ziarno) - wartość liczbowa, którą inicjujemy generator. Z racji tego, iż PRNG są deterministyczne, wybrany algorytm dla danego seeda generuje identyczne wyjście	. 
+\begin{lstlisting}[style=mystyle, language=java, frame=single]
+public static long getSeed() {
+      SecureRandom random = new SecureRandom();
+      byte seed[] = random.generateSeed(20);
+      return Longs.fromByteArray(seed);
+}
+\end{lstlisting}
+\subsection*{Testy chi-kwadrat}
+\subsection*{Testy spektralne}
 
-% Mati tutaj pisze
+%----------------------------------------------------------------------------------------
 \subsection{Blum Blum Shub}
-Algorytm Blum Blum Shub został zaproponowany przez Lenore Blum, Manuela Blum oraz Michaela Shub'a w pracy pt. "A Simple Unpredictable Pseudo-Random Number Generator"\footnote{http://epubs.siam.org/doi/abs/10.1137/0215025}.
+Algorytm \textit{Blum Blum Shub} został zaproponowany przez Lenore Blum, Manuela Blum'a oraz Michaela Shub'a wiosną, 1986. roku, w pracy: "A Simple Unpredictable Pseudo-Random Number Generator"\footnote{http://epubs.siam.org/doi/abs/10.1137/0215025}. Generator ten jest postaci:
+\[ x_{n+1} = (x_{n})^2 \bmod N \]
+gdzie $x_{n+1}$ to kolejny stan generatora, $N$ to iloczyn dwóch dużych liczb pierwszych $p$ i $q$ takich, że:
+\begin{enumerate}
+\item dają w dzieleniu przez 4 resztę 3 ($p\equiv q \equiv 3 \bmod 4$),
+\item mają możliwie mały $NWD(\phi(p-1), \phi(q-1))$, co zapewnia długi cykl.
+\end{enumerate}
+Wynikiem generatora jest kilka ostatnich bitów $x_{n}$.
 \begin{lstlisting}[style=mystyle, language=java, frame=single]
 private static final int p = 11;
 private static final int q = 19;
@@ -120,8 +145,9 @@ public static long getRandomNumber() {
     return Math.abs(seed);
 }
 \end{lstlisting}
-
-\subsection{Linear congruential generator}
+Generator ten jest dosyć wolny, ale za to bardzo bezpieczny. Przy odpowiednich założeniach, odróżnienie jego wyników od szumu jest równie trudne co faktoryzacja $N$.
+%----------------------------------------------------------------------------------------
+\subsection{Liniowy Generator Kongruentny (LCG)}
 \begin{lstlisting}[style=mystyle, language=java, frame=single]
 private final static long a = 25173;
 private final static long b = 13849;
@@ -132,12 +158,53 @@ public static long getRandomNumber() {
     return seed;
 }
 \end{lstlisting}
-
+Addytywny LCG
+$xi+1=(a*xi+c) mod m,$
+Multiplikatywny LCG
+$xi+1 = a * x i mod m$
+••Generowane kolejno liczby są z zakresu od 0 do
+c-1, stąd po m cyklach obliczeniowych liczby
+pseudolosowe zaczynają się powtarzać
+Dla pewnych kombinacji parametrów
+generowany ciąg jest prawie losowy, dla innych
+bardzo szybko staje się okresowy
+•Okres obu przedstawionych generatorów zależy
+od wartości parametrów równania i opisują
+twierdzenia:
+%– Jeżeli m = 2k, dla m (wiekszy_równy) 3, to maksymalny okres
+generatora liniowego wynosi N = 2k-2, gdy a = 3 mod
+8 lub a = 5 mod 8.
+– Jeżeli m jest liczbą pierwszą, to generator liniowy
+posiada okres maksymalny równy m, gdy a jest pierwiastkiem pierwotnym m
+– Pierwiastek pierwotny modulo n to liczba z przedziału
+%<1,n−1>, której potęgi modulo n dają wszystkie liczby z $<1,n−1>$.
+\\ \\Algorytm doboru współczynników dla generatora LCG
+Określamy zakres liczb pseudolosowych
+0..xmax dla LCG addytywnego
+1..xmax dla LCG multiplikatywnego
+Moduł m jest zawsze o 1 większy od maksymalnej liczby
+w zakresie, czyli:
+m = x max + 1
+Przyrost c musi być względnie pierwszy z modułem m
+– moduł m można rozłożyć na czynniki pierwsze i jako c wybrane mogą być czynniki nie występujące w rozłożeniu\\
+– c może być generowane pseudolosowe, pod warunkiem, że spełnia warunek: gcd(c,m) = 1\\
+Mnożnik a dobierany jest tak, aby a - 1 było podzielne przez każdy czynnik pierwszy modułu m\\
+– jeśli moduł m dzieli się przez 4, to a - 1 również powinno być podzielne przez 4\\
+Przykład generatora LCG (wg D. Knutha)
+$xi+1=(a*xi+c) mod m$\\
+x0 - ziarno \\
+%$a=[\pi*109]$\\
+$c=[e*109]$\\
+m = 34359738368 = 235
+e = 2,7182818284590452353602874713527...
+- podstawa logarytmów naturalnych
+%----------------------------------------------------------------------------------------
 \subsection{Mersenne twister}
-
-
-\subsection{Park–Miller random number generator}
-
+%----------------------------------------------------------------------------------------
+\subsection{Generator Park–Miller}
+Generator jest odmianą multilikatywnego liniowego generatora kongruencyjnego, który określamy wzorem:
+\[ x_{n+1} = (a * x_{n}) \bmod M \]
+gdzie, $x_{n+1}$ to następna liczba pseudolosowa, $a$ - współczynnik generujący kolejną liczbę, $M$ - współczynnik określający zakres generowanych liczb (od $0$ do $M-1$).
 \begin{lstlisting}[style=mystyle, language=java, frame=single]
 private static final long max = ((long) 2 << 30) - 1;
 private static final long a = 16807;
@@ -147,10 +214,11 @@ public static long getRandomNumber() {
     return seed;
 }
 \end{lstlisting}
-
+%----------------------------------------------------------------------------------------
 \subsection{Xorshift}
-Algorytm został stworony przez George Marsaglia\footnote{http://www.jstatsoft.org/v08/i14/paper}. Zasada działania opiera się na generowaniu następnych numerów wielokrotnie biorąc różnicę symetryczną z niego i przesuniętej bitowo wersji tej liczby.
-
+Algorytm został zaproponowany przez George Marsaglia\footnote{http://www.jstatsoft.org/v08/i14/paper} w 2003 roku. Liczba $x_{n+1}$ jest generowana poprzez wielokrotną różnicę symetryczną liczb $x_{n}$ i przesuniętej bitowo $x_{n}$. Wykorzystanie funkcji $XOR$ sprawia, że ten algorytm jest niezwykle szybki na współczesnych komputerach.
+\\
+Algorytm ten jest szybki ale nie niezawodny i z pewnością nie nadaje się do zastosowań kryptograficznych. Jednak, połączenie go z nieliniowym generatorem - jak pierwotnie sugerował autor - prowadzi do jednego z najszybszych generatorów, spełniających silne wymogi testów statystycznych.
 
 \begin{lstlisting}[style=mystyle, language=java, frame=single]
 public static long getRandomNumber() {
@@ -161,16 +229,17 @@ public static long getRandomNumber() {
     return Math.abs(seed);
 }
 \end{lstlisting}
-
+Silnik przeglądarki internetowej Webkit korzysta z tego algorytmu przy wywoływaniu $Math.random()$ w języku JavaScript.
+%----------------------------------------------------------------------------------------
 \section*{Wnioski}
 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
 %----------------------------------------------------------------------------------------
 
-\bibliographystyle{unsrt}
+%\bibliographystyle{unsrt}
 
-\bibliography{sample}
+%\bibliography{sample}
 
 %----------------------------------------------------------------------------------------
 

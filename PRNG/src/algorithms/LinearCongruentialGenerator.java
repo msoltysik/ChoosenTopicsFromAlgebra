@@ -1,8 +1,10 @@
 package algorithms;
 
+import algorithms.interfaces.IGenerator;
+
 @SuppressWarnings("UnusedDeclaration")
 
-public abstract class LinearCongruentialGenerator {
+public class LinearCongruentialGenerator implements IGenerator {
     private final static long a = 25173;
     private final static long b = 13849;
     private final static long m = 32768;
@@ -11,7 +13,7 @@ public abstract class LinearCongruentialGenerator {
     /**
      * @return pseudo-random number between 0 and max.
      */
-    public static long getRandomNumber() {
+    public long getRandomNumber() {
         seed = (a * seed + b) % m;
         return seed;
     }
@@ -20,7 +22,7 @@ public abstract class LinearCongruentialGenerator {
      * @param maxValue maximum value which the function can return.
      * @return pseudo-random number between 0 and maxValue param.
      */
-    public static long getRandomNumber(long maxValue) {
+    public long getRandomNumber(long maxValue) {
         seed = getRandomNumber();
         return seed % (maxValue + 1);
     }
@@ -30,7 +32,7 @@ public abstract class LinearCongruentialGenerator {
      * @param maxValue maximum value which the function can return.
      * @return pseudo-random number between minValue param and maxValue param.
      */
-    public static long getRandomNumber(long minValue, long maxValue) {
+    public long getRandomNumber(long minValue, long maxValue) {
         seed = getRandomNumber();
         return minValue + (seed % (maxValue - minValue + 1));
     }
