@@ -6,8 +6,11 @@ import algorithms.interfaces.IGenerator;
 public class BlumBlumShub implements IGenerator {
     private static final int p = 11;
     private static final int q = 19;
-    private static long seed = System.currentTimeMillis() + System.identityHashCode(new Object());
+    private long seed;
 
+    public BlumBlumShub() {
+        seed = System.currentTimeMillis() + System.identityHashCode(new Object());
+    }
     /**
      * @return pseudo-random number between .
      */

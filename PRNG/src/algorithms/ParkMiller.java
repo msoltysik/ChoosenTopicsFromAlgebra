@@ -16,6 +16,7 @@ public class ParkMiller implements IGenerator {
     public ParkMiller(long seed) {
         this.seed = seed;
     }
+
     /**
      * @return pseudo-random number between minValue and maxValue.
      */
