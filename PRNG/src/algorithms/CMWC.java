@@ -5,8 +5,8 @@ import java.util.Random;
 public class CMWC extends Random{
 	private long	carry;
 	private long	multiplier;
-	private int		n = 0;
-	private int		r;
+	private int	n = 0;
+	private int	r;
 	private long[]	seeds;
 
 	public CMWC(){
