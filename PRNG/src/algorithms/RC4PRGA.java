@@ -1,5 +1,6 @@
 package algorithms;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import algorithms.interfaces.IGenerator;
@@ -26,8 +27,11 @@ public class RC4PRGA implements IGenerator {
         }
     }
     private String prga(){
-    	int i = (i+1) % 256;
-    	int j = j + list.get(i) % 256;
+    	int i,j;
+    	i = j = 0;
+    	
+    	i = (i+1) % 256;
+    	j = j + list.get(i) % 256;
     	
     	int tmp = list.get(i);
     	list.set(i, list.get(j));
@@ -37,11 +41,13 @@ public class RC4PRGA implements IGenerator {
     }
 
     public long getRandomNumber() {
-    	String nextpart = '';
-    	String out = '';
-    	for(int i = 0; i < 8; i++){
+    	String nextpart = "";
+    	String out = "";
+    	for(int i = 0; i < 7; i++){
     		nextpart = prga();
-    		out.concat(nextpart);
+    		System.out.println(nextpart);
+    		out = out + nextpart;
+    		System.out.println(out);
     	}
     	return Long.parseLong(out,16);
     }
@@ -62,4 +68,5 @@ public class RC4PRGA implements IGenerator {
         long randomNumber = getRandomNumber();
         return minValue + (randomNumber % (maxValue - minValue + 1));
     }
+}
     
