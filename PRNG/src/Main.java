@@ -3,16 +3,27 @@ import algorithms.interfaces.IGenerator;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
-public class SaveToFile {
+public class Main {
     public static void main(String[] args) {
+        if (args.length != 4) {
+            System.out.println("Usage: java -jar PRNG.jar <1> <2> <3> <4>\n" +
+                    "<1> - Algorithm name,\n" +
+                    "<2> - maxvalue,\n" +
+                    "<3> - iteration,\n" +
+                    "<4> - times.");
+            System.exit(-1);
+        }
         String[] strings = {
                 "BlumBlumShub", "LinearCongruentialGenerator", "LinearFeedbackShiftRegister",
                 "MersenneTwister", "MultiplyWithCarry", "ParkMiller",
                 "Wichman_Hill", "Xorshift"
         };
-        for (String s: strings) {
-            save(s, 10, 20, 3);
+        if (Arrays.asList(strings).contains(args[0])) {
+            save(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+        } else {
+            System.out.println("Błędna nazwa algorytmu.");
         }
     }
 
@@ -25,7 +36,7 @@ public class SaveToFile {
         }
         PrintWriter writer = null;
         try {
-            writer = new  PrintWriter(String.format(".temp-%s.txt", className), "UTF-8");
+            writer = new  PrintWriter(String.format("temp.txt", className), "UTF-8");
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
