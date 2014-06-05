@@ -46,7 +46,7 @@ public class LinearFeedbackShiftRegister implements IGenerator {
         // shift all the registers
         System.arraycopy(bits, 1, bits, 0, M);
 
-        return next;
+        return Math.abs(next);
     }
 
     /**

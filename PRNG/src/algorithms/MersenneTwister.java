@@ -9,29 +9,35 @@ public class MersenneTwister implements IGenerator {
     private static int index = 0;
     private static boolean initialized = false;
 
+    /**
+     *
+     */
     public static void initializeGenerator() {
         MT[0] = (int) (System.currentTimeMillis() + System.identityHashCode(new Object()));
         for (int i = 1; i < 624; i++) {
-//            MT[i] := last 32 bits of(1812433253 * (MT[i-1] xor (right shift by 30 bits(MT[i-1]))) + i) // 0x6c078965
             MT[i] = (1812433253 * (MT[i - 1] ^ ((MT[i - 1] >> 30) + i)));
         }
         initialized = true;
     }
 
+    /**
+     *
+     * @param seed number used to initialize a pseudorandom number generator
+     */
     public static void initializeGenerator(int seed) {
         MT[0] = seed;
         for (int i = 1; i < 624; i++) {
-//            MT[i] := last 32 bits of(1812433253 * (MT[i-1] xor (right shift by 30 bits(MT[i-1]))) + i) // 0x6c078965
             MT[i] = (1812433253 * (MT[i - 1] ^ ((MT[i - 1] >> 30) + i)));
         }
         initialized = true;
     }
 
+    /**
+     *
+     */
     public static void generateNumbers() {
         for (int i = 0; i < 624; i++) {
-//            int y := 32nd bit of(MT[i]) + last 31 bits of(MT[(i+1) mod 624])
             int y = (MT[i] >> 31) + (MT[(i + 1) % 624] >> 1); // ?
-//            MT[i] := MT[(i + 397) mod 624] xor (right shift by 1 bit(y))
             MT[i] = MT[(i + 397) % 624] ^ y >> 1;
             if ((y % 2) == 1) {
                 MT[i] = (int) (MT[i] ^ 2567483615L);
@@ -39,6 +45,9 @@ public class MersenneTwister implements IGenerator {
         }
     }
 
+    /**
+     * @return pseudo-random number between 0 and max.
+     */
     public long getRandomNumber() {
         if (!initialized) {
             initializeGenerator();
@@ -57,11 +66,20 @@ public class MersenneTwister implements IGenerator {
         return Math.abs((int) y);
     }
 
+    /**
+     * @param maxValue maximum value which the function can return.
+     * @return pseudo-random number between 0 and maxValue param.
+     */
     public long getRandomNumber(long maxValue) {
         long randomNumber = getRandomNumber();
         return randomNumber % (maxValue + 1);
     }
 
+    /**
+     * @param minValue minimum value which the function can return.
+     * @param maxValue maximum value which the function can return.
+     * @return pseudo-random number between minValue and maxValue param.
+     */
     public long getRandomNumber(long minValue, long maxValue) {
         long randomNumber = getRandomNumber();
         return minValue + (randomNumber % (maxValue - minValue + 1));

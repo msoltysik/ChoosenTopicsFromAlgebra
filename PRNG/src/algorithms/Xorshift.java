@@ -8,14 +8,20 @@ public class Xorshift implements IGenerator {
     private static final long max = ((long) 2 << 30) - 1;
     private long seed;
 
+    /**
+     *
+     */
     public Xorshift() {
         seed = System.currentTimeMillis() + System.identityHashCode(new Object());
     }
 
+    /**
+     *
+     * @param seed number used to initialize a pseudorandom number generator
+     */
     public Xorshift(long seed) {
         this.seed = seed;
     }
-
 
     /**
      * @return pseudo-random number between 0 and max.

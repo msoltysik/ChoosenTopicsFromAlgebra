@@ -2,10 +2,11 @@ package algorithms;
 
 import algorithms.interfaces.IGenerator;
 
-@SuppressWarnings("UnusedDeclaration")
+@SuppressWarnings({"UnusedDeclaration", "NumericOverflow"})
 public class BlumBlumShub implements IGenerator {
-    private static final int p = 11;
-    private static final int q = 19;
+    // dla p = 11, q = 19 cykl wynosi 4
+    private static final long p = 15107;
+    private static final long q = 4337423;
     private long seed;
 
     public BlumBlumShub() {
@@ -15,7 +16,7 @@ public class BlumBlumShub implements IGenerator {
      * @return pseudo-random number between .
      */
     public long getRandomNumber() {
-        seed = (seed * seed % (p * q));
+        seed = (seed * seed) % (p * q);
         return Math.abs(seed);
     }
 

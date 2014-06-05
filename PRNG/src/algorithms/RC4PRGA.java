@@ -2,50 +2,68 @@ package algorithms;
 
 import algorithms.interfaces.IGenerator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SuppressWarnings("UnusedDeclaration")
 
 public class RC4PRGA implements IGenerator {
-    private int[] s = new int[256];
+    List<Integer> list = new ArrayList<>();
     private long seed;
+
 
     public RC4PRGA() {
         for (int i = 0; i < 256; i++) {
-            s[i] = i;
-            seed = System.currentTimeMillis() + System.identityHashCode(new Object());
+            list.add(i);
+        }
+        int j = 0;
+        java.util.Collections.shuffle(list);
+        for(int i = 0; i < 256; i++){
+            char[] key = "keyforplaintext12345".toCharArray();
+            j = (j + list.get(i) + Character.getNumericValue(key[i% key.length])) % 256;
+            int tmp = list.get(i);
+            list.set(i, list.get(j));
+            list.set(j, tmp);
         }
     }
 
-    public long permute() {
-        long counter = 0L;
-        int i = 0;
-        int j = 0;
-        long out = 0L;
-        while (counter < seed) {
-            int tmp;
-            i = (i + 1) % 256;
-            j = (j + s[i]) % 256;
+    private String prga(){
+        int i,j;
+        i = j = 0;
 
-            tmp = s[j];
-            s[j] = s[i];
-            s[i] = tmp;
+        i = (i+1) % 256;
+        j = j + list.get(i) % 256;
 
-            out += s[(s[i] + s[j]) % 256];
-            counter++;
-        }
-        return out;
+        int tmp = list.get(i);
+        list.set(i, list.get(j));
+        list.set(j, tmp);
+        int t = list.get((i+j)%256);
+        return Integer.toHexString(list.get(t));
     }
 
     public long getRandomNumber() {
-        long random = permute();
-        return random & 0xffffffffL;
+        String nextpart;
+        String out = "";
+        for(int i = 0; i < 7; i++){
+            nextpart = prga();
+            out = out + nextpart;
+        }
+        return Long.parseLong(out,16);
     }
 
     public long getRandomNumber(long maxValue) {
         long randomNumber = getRandomNumber();
-        return randomNumber % (maxValue + 1);
+        return randomNumber % maxValue;
     }
 
     public long getRandomNumber(long minValue, long maxValue) {
+
+        if (minValue > maxValue) {
+            long tmp = minValue;
+            minValue = maxValue;
+            maxValue = tmp;
+        }
+
         long randomNumber = getRandomNumber();
         return minValue + (randomNumber % (maxValue - minValue + 1));
     }

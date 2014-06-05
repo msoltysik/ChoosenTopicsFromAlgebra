@@ -5,7 +5,7 @@ import algorithms.interfaces.IGenerator;
 @SuppressWarnings("UnusedDeclaration")
 public class MultiplyWithCarry implements IGenerator {
 
-    private int c = 3912021;
+    private long c = 3912021;
 
     private long x;
 
@@ -19,8 +19,8 @@ public class MultiplyWithCarry implements IGenerator {
         long t = a * x + c;
         long b = 0xffffffffL;
         x = t % b;
-        c = (int) (t / b);
-        return (int) x;
+        c = t / b;
+        return Math.abs(x);
 
     }
 

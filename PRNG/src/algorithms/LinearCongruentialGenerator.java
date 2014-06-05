@@ -15,7 +15,7 @@ public class LinearCongruentialGenerator implements IGenerator {
      */
     public long getRandomNumber() {
         seed = (a * seed + b) % m;
-        return seed;
+        return Math.abs(seed);
     }
 
     /**

@@ -9,10 +9,17 @@ public class ParkMiller implements IGenerator {
     private static final long a = 16807;
     private static long seed;
 
+    /**
+     *
+     */
     public ParkMiller() {
         seed = System.currentTimeMillis() + System.identityHashCode(new Object());
     }
 
+    /**
+     *
+     * @param seed number used to initialize a pseudorandom number generator
+     */
     public ParkMiller(long seed) {
         this.seed = seed;
     }
@@ -22,7 +29,7 @@ public class ParkMiller implements IGenerator {
      */
     public long getRandomNumber() {
         seed = (a * seed) % max;
-        return seed;
+        return Math.abs(seed);
     }
 
     /**

@@ -100,23 +100,23 @@ i ich analiza pod kątem losowości.} % Subtitle
 \begin{abstract}
 \end{abstract}
 
-\hspace*{3,6mm}\textit{Keywords:PRGN,  $\chi^2$} 
+\hspace*{3,6mm}\textit{Keywords: PRGN,  $\chi^2$} 
 
 \vspace{30pt} % Some vertical space between the abstract and first section
 
 \section*{Wstęp}
-Pseudo-Random Number Generator, PRNG) – program, który na podstawie niewielkiej ilości informacji (ziarna, ang. seed) generuje deterministycznie „potencjalnie nieskończony” ciąg
-bitów, który pod pewnymi względami jest podobny o ciągu uzyskanego z prawdziwie losowego źródła. Generowane ciągi nie są całkiem losowe: jeśli ziarno jest reprezentowane przez k bitów informacji, to generator może wygenerować n-bitowy ciąg jedynie na $2^k$ sposobów spośród $2^n$ możliwych.
-Pożądane cechy generatorów trudne do ustalenia ziarno, choć znany jest ciąg wygenerowanych bitów, trudne do ustalenia kolejno generowane bity, choć znany jest ciąg bitów dotychczas wygenerowanych 
-\\1. Jednorodność. W każdym punkcie generowanego ciągu bitów prawdopodobieństwo wystąpienia jedynki lub zera jest takie samo i wynosi 1/2, oczekiwana liczba zer w całym ciągu wynosi około n/2 dla ciągu n bitów.
-\\2. Skalowalność. Każdy podciąg ciągu bitów, który uzyskał pozytywny wynik testu jakości, poddany temu samemu testowi powinien również uzyskać wynik pozytywny.
-\\3. Zgodność. Zachowanie generatora musi dawać podobne rezultaty niezależnie od początkowej wartości lub fizycznego zjawiska będącego źródłem „losowości”.
+Pseudo-Random Number Generator (PRNG) – program lub podprogram, który na podstawie niewielkiej ilości informacji (ziarno, ang. seed) generuje deterministyczny, potencjalnie nieskończony, ciąg liczb. Generatory liczb pseudolosowych nie generują ciągów prawdziwie losowych - generator inicjowany ziarnem, które może przyjąć $k$ różnych wartości, jest w stanie wyprodukować co najwyżej $k$ różnych ciągów liczb. Ponieważ rozmiar zmiennych reprezentujących wewnętrzny stan generatora jest ograniczony i może on znajdować się tylko w ograniczonej liczbie stanów, po pewnym czasie generator dokona pełnego cyklu i zacznie generować te same wartości. Teoretyczny limit długości cyklu wyrażony jest przez $2^n$, gdzie $n$ to liczba bitów przeznaczonych na przechowywanie stanu wewnętrznego. W praktyce, większość generatorów ma znacznie krótsze okresy.
+\\Pożądane cechy generatorów:
+\begin{enumerate}
+\item trudne do ustalenia ziarno, choć znany jest ciąg wygenerowanych bitów
+\item trudne do ustalenia kolejno generowane bity, choć znany jest ciąg bitów dotychczas wygenerowanych 
+\end{enumerate}
 
 %----------------------------------------------------------------------------------------
 \section{Opis i analiza algorytmów PRNG}
 \subsection*{Informacje wstępne}
-Seed (pl Ziarno) - wartość liczbowa, którą inicjujemy generator. Z racji tego, iż PRNG są deterministyczne, wybrany algorytm dla danego seeda generuje identyczne wyjście	. 
-\begin{lstlisting}[style=mystyle, language=java, frame=single]
+Seed (pl. ziarno) - wartość liczbowa, którą inicjujemy generator. Z racji tego, iż PRNG są deterministyczne, wybrany algorytm dla danego seeda generuje identyczne wyjście. 
+\begin{lstlisting}[style=mystyle, language=java, frame=single, caption = Przykładowa funkcja generująca seeda]
 public static long getSeed() {
       SecureRandom random = new SecureRandom();
       byte seed[] = random.generateSeed(20);
@@ -125,6 +125,7 @@ public static long getSeed() {
 \end{lstlisting}
 \subsection*{Testy chi-kwadrat}
 \subsection*{Testy spektralne}
+Testy dla każdego algorytmu będą przeprowadzane dla czterech wartości: $10^{1}$, $10^{3}$, $10^{6}$, $10^{9}$, bo zakres 32-bitowej liczby $= \frac{32\log(2)}{\log(10)} \approx 9$.
 
 %----------------------------------------------------------------------------------------
 \subsection{Blum Blum Shub}
@@ -136,7 +137,7 @@ gdzie $x_{n+1}$ to kolejny stan generatora, $N$ to iloczyn dwóch dużych liczb 
 \item mają możliwie mały $NWD(\phi(p-1), \phi(q-1))$, co zapewnia długi cykl.
 \end{enumerate}
 Wynikiem generatora jest kilka ostatnich bitów $x_{n}$.
-\begin{lstlisting}[style=mystyle, language=java, frame=single]
+\begin{lstlisting}[style=mystyle, language=java, frame=single, caption = Generowanie następnej liczby pseudolosowej przez BBS]
 private static final int p = 11;
 private static final int q = 19;
 
@@ -148,7 +149,7 @@ public static long getRandomNumber() {
 Generator ten jest dosyć wolny, ale za to bardzo bezpieczny. Przy odpowiednich założeniach, odróżnienie jego wyników od szumu jest równie trudne co faktoryzacja $N$.
 %----------------------------------------------------------------------------------------
 \subsection{Liniowy Generator Kongruentny (LCG)}
-\begin{lstlisting}[style=mystyle, language=java, frame=single]
+\begin{lstlisting}[style=mystyle, language=java, frame=single, caption = Generowanie następnej liczby pseudolosowej przez LCG]
 private final static long a = 25173;
 private final static long b = 13849;
 private final static long m = 32768;
@@ -200,12 +201,13 @@ e = 2,7182818284590452353602874713527...
 - podstawa logarytmów naturalnych
 %----------------------------------------------------------------------------------------
 \subsection{Mersenne twister}
+\textit{Mersenne twister} został opracowany przez Makoto Matsumoto i Takuji Nishimura w 1997 roku\footnote{http://doi.acm.org/10.1145/272991.272995}. Generator ten dostarcza wysokiej jakości liczby pseudolosowe oraz jest bardo szybki. Nazwa pochodzi od tego, że na dlugość okresu została wybrana pierwsza liczba Mersenne'a. Algorytm, mimo swoich zalet, nie nadaje się do zastosowań kryptograficznych. Stosunkowo obserwacja niewielkiej liczby iteracji (624) pozwala przewidzieć wszystkie kolejne. Kolejną kwestią jest dlugi czas inicjalizacji algorytmu - w porównaniu do generatora Fibonacciego lub liniowego generatora kongruencyjnego. 
 %----------------------------------------------------------------------------------------
 \subsection{Generator Park–Miller}
-Generator jest odmianą multilikatywnego liniowego generatora kongruencyjnego, który określamy wzorem:
+Generator jest odmianą multiplikatywnego liniowego generatora kongruencyjnego, który określamy wzorem:
 \[ x_{n+1} = (a * x_{n}) \bmod M \]
 gdzie, $x_{n+1}$ to następna liczba pseudolosowa, $a$ - współczynnik generujący kolejną liczbę, $M$ - współczynnik określający zakres generowanych liczb (od $0$ do $M-1$).
-\begin{lstlisting}[style=mystyle, language=java, frame=single]
+\begin{lstlisting}[style=mystyle, language=java, frame=single, caption = Generowanie następnej liczby pseudolosowej przez algorytm Parka-Millera.]
 private static final long max = ((long) 2 << 30) - 1;
 private static final long a = 16807;
 
@@ -220,7 +222,7 @@ Algorytm został zaproponowany przez George Marsaglia\footnote{http://www.jstats
 \\
 Algorytm ten jest szybki ale nie niezawodny i z pewnością nie nadaje się do zastosowań kryptograficznych. Jednak, połączenie go z nieliniowym generatorem - jak pierwotnie sugerował autor - prowadzi do jednego z najszybszych generatorów, spełniających silne wymogi testów statystycznych.
 
-\begin{lstlisting}[style=mystyle, language=java, frame=single]
+\begin{lstlisting}[style=mystyle, language=java, frame=single, caption = Generowanie następnej liczby pseudolosowej przez Xorshift]
 public static long getRandomNumber() {
     seed ^= seed >> 12;
     seed ^= seed << 25;
