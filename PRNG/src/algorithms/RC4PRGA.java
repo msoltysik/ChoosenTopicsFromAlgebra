@@ -8,25 +8,29 @@ import java.util.List;
 @SuppressWarnings("UnusedDeclaration")
 
 public class RC4PRGA implements IGenerator {
-    List<Integer> list = new ArrayList<>();
-    private long seed;
+    private List<Integer> list = new ArrayList<>();
 
 
-    public RC4PRGA() {
-        for (int i = 0; i < 256; i++) {
-            list.add(i);
-        }
+    private void init() {
+        long seed = System.currentTimeMillis() + System.identityHashCode(new Object());
+        String key = Long.toHexString(seed);
         int j = 0;
-        java.util.Collections.shuffle(list);
         for(int i = 0; i < 256; i++){
-            char[] key = "keyforplaintext12345".toCharArray();
-            j = (j + list.get(i) + Character.getNumericValue(key[i% key.length])) % 256;
+            j = (j + list.get(i) + (int) key.charAt(i%key.length())) % 256;
             int tmp = list.get(i);
             list.set(i, list.get(j));
             list.set(j, tmp);
         }
     }
 
+    public RC4PRGA() {
+        for (int i = 0; i < 256; i++) {
+            list.add(i);
+        }
+
+        java.util.Collections.shuffle(list);
+        init();
+    }
     private String prga(){
         int i,j;
         i = j = 0;
@@ -42,6 +46,7 @@ public class RC4PRGA implements IGenerator {
     }
 
     public long getRandomNumber() {
+        init();
         String nextpart;
         String out = "";
         for(int i = 0; i < 7; i++){
@@ -68,3 +73,4 @@ public class RC4PRGA implements IGenerator {
         return minValue + (randomNumber % (maxValue - minValue + 1));
     }
 }
+    

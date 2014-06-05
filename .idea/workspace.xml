@@ -28,13 +28,26 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Main.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Main.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/PRNG/src/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.554295" vertical-offset="342" max-vertical-offset="1278">
+            <state vertical-scroll-proportion="0.0" vertical-offset="342" max-vertical-offset="1278">
               <caret line="38" column="57" selection-start-line="38" selection-start-column="57" selection-end-line="38" selection-end-column="57" />
               <folding>
                 <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RC4PRGA.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/PRNG/src/algorithms/RC4PRGA.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1458">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#115#153#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -75,13 +88,13 @@
         <option value="$PROJECT_DIR$/PRNG/src/temp/BarChartDemo1.java" />
         <option value="$PROJECT_DIR$/PRNG/src/temp/ChiSquareTest.java" />
         <option value="$PROJECT_DIR$/PRNG/src/algorithms/BlumBlumShub.java" />
-        <option value="$PROJECT_DIR$/PRNG/src/algorithms/RC4PRGA.java" />
         <option value="$PROJECT_DIR$/the-file-name.txt" />
         <option value="$PROJECT_DIR$/PRNG/src/temp/SaveToFile.java" />
         <option value="$PROJECT_DIR$/PRNG/src/algorithms/SaveToFile.java" />
         <option value="$PROJECT_DIR$/.temp.txt" />
         <option value="$PROJECT_DIR$/PRNG/src/SaveToFile.java" />
         <option value="$PROJECT_DIR$/PRNG/src/Main.java" />
+        <option value="$PROJECT_DIR$/PRNG/src/algorithms/RC4PRGA.java" />
       </list>
     </option>
   </component>
@@ -657,13 +670,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/PRNG/src/algorithms/RC4PRGA.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6126418" vertical-offset="0" max-vertical-offset="1350">
-          <caret line="21" column="22" selection-start-line="21" selection-start-column="22" selection-end-line="21" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/PRNG/src/algorithms/LinearCongruentialGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="810">
@@ -702,10 +708,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/PRNG/src/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.554295" vertical-offset="342" max-vertical-offset="1278">
+        <state vertical-scroll-proportion="0.0" vertical-offset="342" max-vertical-offset="1278">
           <caret line="38" column="57" selection-start-line="38" selection-start-column="57" selection-end-line="38" selection-end-column="57" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/PRNG/src/algorithms/RC4PRGA.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1458">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#115#153#0" expanded="true" />
           </folding>
         </state>
       </provider>
