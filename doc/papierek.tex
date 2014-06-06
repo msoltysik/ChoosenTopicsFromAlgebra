@@ -261,6 +261,7 @@ znanego także jako rekursja Zeisela.
 \end{lstlisting}
 \includegraphics[width=\linewidth]{img/wh-1.png}
 
+%----------------------------------------------------------------------------------------------------------------- %
 \subsection{Linear feedback shift register}
 \textit{Linear feedback shift register} albo inaczej Rejestr przesuwający z liniowym sprzężeniem zwrotnym to generator, którego bit wejściowy jest funkcją jego poprzedniego stanu. Wartość początkowa rejestru jest jego ziarnem. Następnie ustalone funkcje konkretnych komórek rejestru XORują wynik bitu wychodzącego.
 \begin{lstlisting}[style=mystyle, language=java, frame=single, caption = generowanie liczby za pomocą LFSR i przesuwanie komórek.] 
@@ -335,6 +336,16 @@ $$(3)\ c:= (int)\ t/b$$
 Warto zauważyć, że przy arytmetyce $b=2^{32}$ wartość $c$ będzie generowana przez pierwsze 32 bity liczby, natomiast kolejna wartość x przez dolne 32 bity. Mnożnik $a$ jest dobrany w taki sposób aby $ab-1$ i $(ab-1)/2$ były liczbami pierwszymi.
 \newline Generator MWC przechodzi testy statystyczne, których generatory LCG nie przechodzą. Przez ten fakt MWC rozważany był jako algorytm kryptograficznie bezpieczny. Jednak badania pokazują, że bity generowane są lekko stronniczo, co przekreśla go w zastosowaniach kryptograficznych. Zostało to naprawione w generatorze CMWC (Complimentary Multiply with Carry).\\
 \includegraphics[width=\linewidth]{img/mwc-1.png}
+
+%------------------------------------------------------------------------------------------------ %
+	
+
+    \subsection{Lagged-Fibonacci-Generator}
+    Generator Fibonacciego jest jednym z wielu wariantów uogólnionego generatora liniowego liczb losowych. \\
+    Generator korzysta z ciągu Fibonacciego, stąd wzór:
+    $X_{n}=X_{n-1}+X_{n-2}$ \textit{mod m}
+    Generator Fibonacciego ma dużo lepsze parametry jakościowe od innych generatorów liniowych, ale wymaga dużo większego nakładu obliczeń przy generacji, co wiąże się z czasem. Wadą tego generatora są duże korelacje między wyrazami ciągu. Ciągi te spełniają warunek rozkładu, ale nie spełniają warunku niezależności.
+
 
 %----------------------------------------------------------------------------------------
 
