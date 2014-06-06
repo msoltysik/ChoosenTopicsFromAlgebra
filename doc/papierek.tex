@@ -31,6 +31,7 @@
 \usepackage[T1]{fontenc} % Required for accented characters
 \linespread{1.05} % Change line spacing here, Palatino benefits from a slight increase by default
 \usepackage{color}
+\usepackage{graphicx}
 \makeatletter
 \renewcommand\@biblabel[1]{\textbf{#1.}} % Change the square brackets for each bibliography item from '[1]' to '1.'
 \renewcommand{\@listI}{\itemsep=0pt} % Reduce the space between items in the itemize and enumerate environments and the bibliography
@@ -79,12 +80,12 @@
 %----------------------------------------------------------------------------------------
 
 \title{\textbf{Przegląd wybranych generatorów liczb pseudolosowych}\\ % Title
-i ich analiza pod kątem losowości.} % Subtitle
+i analiza ich widma spektralnego.} % Subtitle
 
 \author{\textsc{Mateusz Sołtysik, Andrzej Kwak, Wiktor Dyngosz} % Author
 \\{Politechnika Wrocławska, \textit{Wydział Podstawowych Problemów Techniki}}} % Institution
 
-\date{\today} % Date
+\date{Czerwiec, 2014} % Date
 
 %----------------------------------------------------------------------------------------
 
@@ -98,35 +99,47 @@ i ich analiza pod kątem losowości.} % Subtitle
 
 %\renewcommand{\abstractname}{Summary} % Uncomment to change the name of the abstract to something else
 
-\begin{abstract}
-\end{abstract}
-
-\hspace*{3,6mm}\textit{Keywords: PRGN,  $\chi^2$} 
-
-\vspace{30pt} % Some vertical space between the abstract and first section
-
 \section*{Wstęp}
 Pseudo-Random Number Generator (PRNG) – program lub podprogram, który na podstawie niewielkiej ilości informacji (ziarno, ang. seed) generuje deterministyczny, potencjalnie nieskończony, ciąg liczb. Generatory liczb pseudolosowych nie generują ciągów prawdziwie losowych - generator inicjowany ziarnem, które może przyjąć $k$ różnych wartości, jest w stanie wyprodukować co najwyżej $k$ różnych ciągów liczb. Ponieważ rozmiar zmiennych reprezentujących wewnętrzny stan generatora jest ograniczony i może on znajdować się tylko w ograniczonej liczbie stanów, po pewnym czasie generator dokona pełnego cyklu i zacznie generować te same wartości. Teoretyczny limit długości cyklu wyrażony jest przez $2^n$, gdzie $n$ to liczba bitów przeznaczonych na przechowywanie stanu wewnętrznego. W praktyce, większość generatorów ma znacznie krótsze okresy.
 \\Pożądane cechy generatorów:
 \begin{enumerate}
 \item trudne do ustalenia ziarno, choć znany jest ciąg wygenerowanych bitów
-\item trudne do ustalenia kolejno generowane bity, choć znany jest ciąg bitów dotychczas wygenerowanych 
+\item trudne do ustalenia kolejno generowane bity, choć znany jest ciąg bitów dotychczas wygenerowanych
 \end{enumerate}
-
+Przykłady zastosowań generatorów liczb pseudolosowych:
+\begin{enumerate}
+\item Kryptografia
+\item Całkowanie numeryczne (metoda Monte-Carlo)
+\item Symulacja systemów masowej obsługi
+\item Automaty do gier losowych
+\end{enumerate}
+W tej pracy przedstawiamy opis, zasadę działania oraz analizę widma spektralnego wymienionych algorytmów:
+\begin{enumerate}
+\item Blum Blum Shub
+\item Liniowy Generator Kongruentny (LCG)
+\item Mersenne twister
+\item Generator Parka-Millera
+\item Xorshift
+\item Wichmann and Hill
+\item Linear feedback shift register
+\item RC4
+\item Multiply-With-Carry
+\end{enumerate}
+todo
+\pagebreak
 %----------------------------------------------------------------------------------------
 \section{Opis i analiza algorytmów PRNG}
 \subsection*{Informacje wstępne}
-Seed (pl. ziarno) - wartość liczbowa, którą inicjujemy generator. Z racji tego, iż PRNG są deterministyczne, wybrany algorytm dla danego seeda generuje identyczne wyjście. 
-\begin{lstlisting}[style=mystyle, language=java, frame=single, caption = Przykładowa funkcja generująca seeda]
+Każdy - opisany w tej pracy - algorytm, powinien być inicjowany tzw. seedem. Przypomnijmy, że dany algorytm z ustalonymi parametrami i znaną wartością seed, generuje te same ciągi! Aby zapobiec przekłamaniom w tym zakresie postanowiliśmy, że nasza implementacja będzie korzystała z funkcji $getSeed()$, która przy procesie generacji ziarna wykorzystuje niedeterministyczne źródło bitów ($/dev/urandom$). \begin{lstlisting}[style=mystyle, language=java, frame=single, caption = Przykładowa funkcja generująca seed.]
 public static long getSeed() {
       SecureRandom random = new SecureRandom();
       byte seed[] = random.generateSeed(20);
       return Longs.fromByteArray(seed);
 }
 \end{lstlisting}
-\subsection*{Testy chi-kwadrat}
 \subsection*{Testy spektralne}
-Testy dla każdego algorytmu będą przeprowadzane dla czterech wartości: $10^{1}$, $10^{3}$, $10^{6}$, $10^{9}$, bo zakres 32-bitowej liczby $= \frac{32\log(2)}{\log(10)} \approx 9$.
+Analiza spektralna algorytmu służącego do generowania liczb pseudolosowych polega na wygenerowaniu liczby próbek $p$ par uporządkowanych kolejnych liczb $(x_{i}, x_{i+1})$ dla $i \in 0,1,2,\dots,p-1$. W ramach tej pracy została zaimplementowana lista algorytmów oraz stworzony program GUI, który umożliwia przeprowadzanie owych testów. \\
+Testy dla każdego algorytmu nie powinny przekraczać wartości $10^{9}$, ponieważ zakres 32-bitowej liczby jest równy $\frac{32\log(2)}{\log(10)} \approx 9$.
 
 %----------------------------------------------------------------------------------------
 \subsection{Blum Blum Shub}
@@ -147,9 +160,29 @@ public static long getRandomNumber() {
     return Math.abs(seed);
 }
 \end{lstlisting}
-Generator ten jest dosyć wolny, ale za to bardzo bezpieczny. Przy odpowiednich założeniach, odróżnienie jego wyników od szumu jest równie trudne co faktoryzacja $N$.
+Generator ten jest nie jest najszybszy, jednakże jest bardzo bezpieczny. Przy odpowiednich założeniach, odróżnienie jego wyników od szumu jest równie trudne co faktoryzacja $N$.\\
+\includegraphics[width=\linewidth]{img/bbs-1.png}
 %----------------------------------------------------------------------------------------
 \subsection{Liniowy Generator Kongruentny (LCG)}
+Liniowe Generatory Kongruentne to najbardziej rozpowszechnione w praktyce algorytmy PRNG. Wyróżniamy dwa rodzaje tych generatorów:
+\begin{enumerate}
+\item Addytywne\\
+W postaci: $x_{i+1}=(a*x_{i}+c) \bmod m$
+\item Multiplikatywne\\
+W postaci: $x_{i+1} = (a * x_{i}) \bmod m$, gdzie:
+\end{enumerate}
+$x_{i+1}$ to kolejna liczba pseudolosowa,\\
+$m, 0 < m$ - zakres generowanej liczby\\
+$a, 0 < a < m$ - współczynnik mnożenia\\
+$c, 0 \le c < m$ - współczynnik inkrementacji\\
+Dla pewnych kombinacji parametrów generowany ciąg jest prawie losowy, dla innych
+bardzo szybko staje się okresowy. Cechą tych generatorów jest również fakt, iż jeśli kolejna wygenerowana liczba powtarza się w ciągu liczb już wygenerowanych, to wpadamy w cykl: $x_{1}, x_{2},\dots,x_{1},x_{2}$. Mimo bardzo prostej budowy i zasady działania, powstało wiele prac i analiz matematycznych, które mówią nam o najlepszym doborze parametrów $m, a, c$. Najlepszym, to znaczy takim w którym cykl będzie jak najdłuższy. Przykładowe zalecenia: \\
+\begin{enumerate}
+\item Parametr $m$ powinien być duży, najlepiej wielokrotnością $2$ (najczęsciej spotyka się generatory LCG, w których $m = 2^{32}$ lub (w nowszych) $m = 2^{64}$)
+\item Parametr $a$ powinien być o jeden rząd mniejszy niż $m$.
+\item Dobrą wartością dla $a$ jest liczba postaci $t21$, gdzie $t$ - liczba parzysta.
+\end{enumerate}
+
 \begin{lstlisting}[style=mystyle, language=java, frame=single, caption = Generowanie następnej liczby pseudolosowej przez LCG]
 private final static long a = 25173;
 private final static long b = 13849;
@@ -160,49 +193,13 @@ public static long getRandomNumber() {
     return seed;
 }
 \end{lstlisting}
-Addytywny LCG
-$xi+1=(a*xi+c) mod m,$
-Multiplikatywny LCG
-$xi+1 = a * x i mod m$
-••Generowane kolejno liczby są z zakresu od 0 do
-c-1, stąd po m cyklach obliczeniowych liczby
-pseudolosowe zaczynają się powtarzać
-Dla pewnych kombinacji parametrów
-generowany ciąg jest prawie losowy, dla innych
-bardzo szybko staje się okresowy
-•Okres obu przedstawionych generatorów zależy
-od wartości parametrów równania i opisują
-twierdzenia:
-%– Jeżeli m = 2k, dla m (wiekszy_równy) 3, to maksymalny okres
-generatora liniowego wynosi N = 2k-2, gdy a = 3 mod
-8 lub a = 5 mod 8.
-– Jeżeli m jest liczbą pierwszą, to generator liniowy
-posiada okres maksymalny równy m, gdy a jest pierwiastkiem pierwotnym m
-– Pierwiastek pierwotny modulo n to liczba z przedziału
-%<1,n−1>, której potęgi modulo n dają wszystkie liczby z $<1,n−1>$.
-\\ \\Algorytm doboru współczynników dla generatora LCG
-Określamy zakres liczb pseudolosowych
-0..xmax dla LCG addytywnego
-1..xmax dla LCG multiplikatywnego
-Moduł m jest zawsze o 1 większy od maksymalnej liczby
-w zakresie, czyli:
-m = x max + 1
-Przyrost c musi być względnie pierwszy z modułem m
-– moduł m można rozłożyć na czynniki pierwsze i jako c wybrane mogą być czynniki nie występujące w rozłożeniu\\
-– c może być generowane pseudolosowe, pod warunkiem, że spełnia warunek: gcd(c,m) = 1\\
-Mnożnik a dobierany jest tak, aby a - 1 było podzielne przez każdy czynnik pierwszy modułu m\\
-– jeśli moduł m dzieli się przez 4, to a - 1 również powinno być podzielne przez 4\\
-Przykład generatora LCG (wg D. Knutha)
-$xi+1=(a*xi+c) mod m$\\
-x0 - ziarno \\
-%$a=[\pi*109]$\\
-$c=[e*109]$\\
-m = 34359738368 = 235
-e = 2,7182818284590452353602874713527...
-- podstawa logarytmów naturalnych
+\includegraphics[width=\linewidth]{img/lcg-1.png}
 %----------------------------------------------------------------------------------------
 \subsection{Mersenne twister}
-\textit{Mersenne twister} został opracowany przez Makoto Matsumoto i Takuji Nishimura w 1997 roku\footnote{http://doi.acm.org/10.1145/272991.272995}. Generator ten dostarcza wysokiej jakości liczby pseudolosowe oraz jest bardzo szybki. Nazwa pochodzi od tego, że na dlugość okresu została wybrana pierwsza liczba Mersenne'a. Algorytm, mimo swoich zalet, nie nadaje się do zastosowań kryptograficznych. Stosunkowo obserwacja niewielkiej liczby iteracji (624) pozwala przewidzieć wszystkie kolejne. Kolejną kwestią jest dlugi czas inicjalizacji algorytmu - w porównaniu do generatora Fibonacciego lub liniowego generatora kongruencyjnego. 
+
+\textit{Mersenne twister} został opracowany przez Makoto Matsumoto i Takuji Nishimura w 1997 roku\footnote{http://doi.acm.org/10.1145/272991.272995}. Generator ten dostarcza wysokiej jakości liczby pseudolosowe oraz jest bardo szybki. Nazwa pochodzi od tego, że na dlugość okresu została wybrana pierwsza liczba Mersenne'a. Algorytm, mimo swoich zalet, nie nadaje się do zastosowań kryptograficznych. Stosunkowo obserwacja niewielkiej liczby iteracji (624) pozwala przewidzieć wszystkie kolejne. Kolejną kwestią jest dlugi czas inicjalizacji algorytmu - w porównaniu do generatora Fibonacciego lub liniowego generatora kongruencyjnego. 
+\includegraphics[width=\linewidth]{img/mt-1.png}
+
 %----------------------------------------------------------------------------------------
 \subsection{Generator Park–Miller}
 Generator jest odmianą multiplikatywnego liniowego generatora kongruencyjnego, który określamy wzorem:
@@ -217,6 +214,7 @@ public static long getRandomNumber() {
     return seed;
 }
 \end{lstlisting}
+\includegraphics[width=\linewidth]{img/pm-1.png}
 %----------------------------------------------------------------------------------------
 \subsection{Xorshift}
 Algorytm został zaproponowany przez George Marsaglia\footnote{http://www.jstatsoft.org/v08/i14/paper} w 2003 roku. Liczba $x_{n+1}$ jest generowana poprzez wielokrotną różnicę symetryczną liczb $x_{n}$ i przesuniętej bitowo $x_{n}$. Wykorzystanie funkcji $XOR$ sprawia, że ten algorytm jest niezwykle szybki na współczesnych komputerach.
@@ -232,13 +230,14 @@ public static long getRandomNumber() {
     return Math.abs(seed);
 }
 \end{lstlisting}
-Silnik przeglądarki internetowej Webkit korzysta z tego algorytmu przy wywoływaniu $Math.random()$ w języku JavaScript.
+Silnik przeglądarki internetowej Webkit korzysta z tego algorytmu przy wywoływaniu $Math.random()$ w języku JavaScript.\\
+\includegraphics[width=\linewidth]{img/xorshift-1.png}
 %---------------------------------------------------------------------------------------- %
 \subsection{Wichmann and Hill}
 Algorytm został zaproponowany przez autorów w 1982 roku. Jego przybliżony okres wynosi $2^{43}$ z tego powodu generator stał się bardzo popularny. Algorytm wykorzystuje kombinacje trzech liniowych generatów kogruentnych (LCG). Na początku inicjalizowane są trzy wartości $I_x$, $I_y$, $ I_z$ które przyjmuja wartości od 1 do 30,000. Następnie wykonywane są następujące operacje: 
-$$I_x := 171 \times (I_x \  mod \ 177) - 2 \times (I_x : 177) $$
-$$I_y := 172 \times (I_y\ mod\ 176) - 35 \times (I_y : 176) $$
-$$ I_z := 170 \times (I_z\ mod \ 178) - 63 \times (I_z : 178)$$
+$$I_x := 171 \times (I_x  \bmod  177) - 2 \times (I_x : 177) $$
+$$I_y := 172 \times (I_y  \bmod 176) - 35 \times (I_y : 176) $$
+$$ I_z := 170 \times (I_z \bmod  178) - 63 \times (I_z : 178)$$
 \textbf{if}$I_x < 0$ \textbf{then}
 \newline \indent	$I_x := I_x + 30269;$
 
@@ -260,7 +259,7 @@ znanego także jako rekursja Zeisela.
 \end{lstlisting}
 
 \subsection{Linear feedback shift register}
-Linear feedback shift register albo inaczej Rejestr przesuwający z liniowym sprzężeniem zwrotnym to generator, którego bit wejściowy jest funkcją jego poprzedniego stanu. Wartość początkowa rejestru jest jego ziarnem. Następnie ustalone funkcje konkretnych komorek rejestru XORują wynik bitu wychodzącego.
+Linear feedback shift register albo inaczej Rejestr przesuwający z liniowym sprzężeniem zwrotnym to generator, którego bit wejściowy jest funkcją jego poprzedniego stanu. Wartość początkowa rejestru jest jego ziarnem. Następnie ustalone funkcje konkretnych komórek rejestru XORują wynik bitu wychodzącego.
 \begin{lstlisting}[style=mystyle, language=java, frame=single, caption = generowanie liczby za pomocą LFSR i przesuwanie komórek.] 
         // wygeneruj liczbe losowa
         int next = 0;
@@ -268,22 +267,25 @@ Linear feedback shift register albo inaczej Rejestr przesuwający z liniowym spr
             next |= (bits[i] ? 1 : 0) << i;
         }
 
-        // przesun na zero jeśli liczba ujemna
+        // przesun na zero jesli liczba ujemna
         if (next < 0) next++;
 
-        // wylicz ostatni rejestr ze stanów określonych rejestrów
+        // wylicz ostatni rejestr ze stanow okreslonych rejestrow
         bits[M] = false;
         for (int TAP : TAPS) {
             bits[M] ^= bits[M - TAP];
         }
 
-        // przesuwanie rejestrów
+        // przesuwanie rejestrow
         System.arraycopy(bits, 1, bits, 0, M);
 
         return Math.abs(next);
     
 \end{lstlisting}
-Jak widzimy na powyższym listingu liczba generowana jest za pomocą obecnych stanów tablicy. Po wylosowaniu wyrzucany jest ostatni bit i jest xorowany z określonymi przez nas komórkami. Następnie tablica jest przesuwana o 1.
+Jak widzimy na powyższym listingu liczba generowana jest za pomocą obecnych stanów tablicy. Po wylosowaniu wyrzucany jest ostatni bit i jest xorowany z określonymi przez nas komórkami. Następnie tablica jest przesuwana o 1. \newline
+Każdy LFSR jest związany z określonym wielomianem z pierścienia wielomianów R[t], gdzie R jest ciałem skończonym $Z_2$.
+Okres rejestru jest ograniczony przez stopień stowarzyszonego z nim wielomianu i wynosi maksymalnie $2^d - 1$, gdzie d jest stopniem wielomianu (ciało ${Z}_2$ ma charakterystykę równą 2). Okres danego LFSR jest maksymalny jeżeli stowarzyszony z nim wielomian jest wielomianem pierwotnym. Rejestr taki, nazywamy rejestrem maksymalnej długości.
+\newline Zaletą LFSR jest niesamowita szybkość wynikająca z operacji logicznych przez co znalazł on zastosowanie w szyfrach strumieniowych. 
 %---------------------------------------------------------------------------------------- %
 \subsection{RC4}
 RC4 to szyfr strumieniowy, wymyślony przez Rona Rivesta w 1987 roku. Algorytm opiera się na 256 elementowej tablicy i dwóch wskaźnikach. Początkowo tworzona jest permutacja identycznościowa. Następnie w 256 iteracjach tablica jest przetwarzana i mieszana z bajtami klucza.
@@ -321,10 +323,14 @@ MWC opiera sie na operacji modulo liczby b (zazwyczaj wynosi ona $2^{32}$ dlateg
 Generator wymaga podstawy $b$ mnożnika $a$ , zbioru $x$ losowych wartości takich że r zawiera sie w $b$ i początkowego przeniesienia $c < a$. 
 Algorytm wygląda następująco:
 $$(1)\ t:=a \times x + c $$
-$$(2)\ x:= t \ mod \ b $$
+$$(2)\ x:= t \bmod  b $$
 $$(3)\ c:= (int)\ t/b$$
 Warto zauważyć, że przy arytmetyce $b=2^{32}$ wartość $c$ będzie generowana przez pierwsze 32 bity liczby, natomiast kolejna wartość x przez dolne 32 bity. Mnożnik $a$ jest dobrany w taki sposób aby $ab-1$ i $(ab-1)/2$ były liczbami pierwszymi.
 \newline Generator MWC przechodzi testy statystyczne, których generatory LCG nie przechodzą. Przez ten fakt MWC rozważany był jako algorytm kryptograficznie bezpieczny. Jednak badania pokazują, że bity generowane są lekko stronniczo, co przekreśla go w zastosowaniach kryptograficznych.	
+
+
+%----------------------------------------------------------------------------------------
+
 \section*{Wnioski}
 
 
