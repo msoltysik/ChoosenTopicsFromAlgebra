@@ -26,6 +26,7 @@ public class LinearFeedbackShiftRegister implements IGenerator {
 
     /* generate a random int uniformly on the interval [-2^31 + 1, 2^31 - 1] */
     public long getRandomNumber() {
+    	generateLSFR(System.currentTimeMillis() + System.identityHashCode(new Object()));
         //printBits();
 
         // calculate the integer value from the registers
