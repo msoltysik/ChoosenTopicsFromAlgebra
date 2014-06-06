@@ -1,3 +1,4 @@
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Thin Sectioned Essay
 % LaTeX Template
@@ -201,7 +202,7 @@ e = 2,7182818284590452353602874713527...
 - podstawa logarytmów naturalnych
 %----------------------------------------------------------------------------------------
 \subsection{Mersenne twister}
-\textit{Mersenne twister} został opracowany przez Makoto Matsumoto i Takuji Nishimura w 1997 roku\footnote{http://doi.acm.org/10.1145/272991.272995}. Generator ten dostarcza wysokiej jakości liczby pseudolosowe oraz jest bardo szybki. Nazwa pochodzi od tego, że na dlugość okresu została wybrana pierwsza liczba Mersenne'a. Algorytm, mimo swoich zalet, nie nadaje się do zastosowań kryptograficznych. Stosunkowo obserwacja niewielkiej liczby iteracji (624) pozwala przewidzieć wszystkie kolejne. Kolejną kwestią jest dlugi czas inicjalizacji algorytmu - w porównaniu do generatora Fibonacciego lub liniowego generatora kongruencyjnego. 
+\textit{Mersenne twister} został opracowany przez Makoto Matsumoto i Takuji Nishimura w 1997 roku\footnote{http://doi.acm.org/10.1145/272991.272995}. Generator ten dostarcza wysokiej jakości liczby pseudolosowe oraz jest bardzo szybki. Nazwa pochodzi od tego, że na dlugość okresu została wybrana pierwsza liczba Mersenne'a. Algorytm, mimo swoich zalet, nie nadaje się do zastosowań kryptograficznych. Stosunkowo obserwacja niewielkiej liczby iteracji (624) pozwala przewidzieć wszystkie kolejne. Kolejną kwestią jest dlugi czas inicjalizacji algorytmu - w porównaniu do generatora Fibonacciego lub liniowego generatora kongruencyjnego. 
 %----------------------------------------------------------------------------------------
 \subsection{Generator Park–Miller}
 Generator jest odmianą multiplikatywnego liniowego generatora kongruencyjnego, który określamy wzorem:
@@ -232,8 +233,100 @@ public static long getRandomNumber() {
 }
 \end{lstlisting}
 Silnik przeglądarki internetowej Webkit korzysta z tego algorytmu przy wywoływaniu $Math.random()$ w języku JavaScript.
-%----------------------------------------------------------------------------------------
+%---------------------------------------------------------------------------------------- %
+\subsection{Wichmann and Hill}
+Algorytm został zaproponowany przez autorów w 1982 roku. Jego przybliżony okres wynosi $2^{43}$ z tego powodu generator stał się bardzo popularny. Algorytm wykorzystuje kombinacje trzech liniowych generatów kogruentnych (LCG). Na początku inicjalizowane są trzy wartości $I_x$, $I_y$, $ I_z$ które przyjmuja wartości od 1 do 30,000. Następnie wykonywane są następujące operacje: 
+$$I_x := 171 \times (I_x \  mod \ 177) - 2 \times (I_x : 177) $$
+$$I_y := 172 \times (I_y\ mod\ 176) - 35 \times (I_y : 176) $$
+$$ I_z := 170 \times (I_z\ mod \ 178) - 63 \times (I_z : 178)$$
+\textbf{if}$I_x < 0$ \textbf{then}
+\newline \indent	$I_x := I_x + 30269;$
+
+\noindent \textbf{if}$I_y < 0$ \textbf{then}
+\newline \indent	$I_y := I_y + 30307;$
+
+\noindent \textbf{if}$I_z < 0$ \textbf{then}
+\newline \indent	$I_z := I_z + 30323;$
+\noindent \newline $W := I_x/30269.0 + I_y/30307.0 + I_z/30323.0$
+\newline W pracy przy implementacji algorytmu skorzystano z faktu, że WH RNG może być zapisany jako prosty generator kongruentny za pomocą wzoru: 
+$$X_{n+1} = 16555425264690 \times X_n\ mod\ 27817185604309 $$
+znanego także jako rekursja Zeisela.
+
+\begin{lstlisting}[style=mystyle, language=java, frame=single, caption = Generowanie następnej liczby pseudolosowej przez algorytm Wichmanna-Hilla na podstawie rekursji Zeisela.]
+    public long getRandomNumber() {
+        seed = (16555425264690L * seed) % 27817185604309L;
+        return Math.abs(seed);
+    }
+\end{lstlisting}
+
+\subsection{Linear feedback shift register}
+Linear feedback shift register albo inaczej Rejestr przesuwający z liniowym sprzężeniem zwrotnym to generator, którego bit wejściowy jest funkcją jego poprzedniego stanu. Wartość początkowa rejestru jest jego ziarnem. Następnie ustalone funkcje konkretnych komorek rejestru XORują wynik bitu wychodzącego.
+\begin{lstlisting}[style=mystyle, language=java, frame=single, caption = generowanie liczby za pomocą LFSR i przesuwanie komórek.] 
+        // wygeneruj liczbe losowa
+        int next = 0;
+        for (int i = 0; i < M; i++) {
+            next |= (bits[i] ? 1 : 0) << i;
+        }
+
+        // przesun na zero jeśli liczba ujemna
+        if (next < 0) next++;
+
+        // wylicz ostatni rejestr ze stanów określonych rejestrów
+        bits[M] = false;
+        for (int TAP : TAPS) {
+            bits[M] ^= bits[M - TAP];
+        }
+
+        // przesuwanie rejestrów
+        System.arraycopy(bits, 1, bits, 0, M);
+
+        return Math.abs(next);
+    
+\end{lstlisting}
+Jak widzimy na powyższym listingu liczba generowana jest za pomocą obecnych stanów tablicy. Po wylosowaniu wyrzucany jest ostatni bit i jest xorowany z określonymi przez nas komórkami. Następnie tablica jest przesuwana o 1.
+%---------------------------------------------------------------------------------------- %
+\subsection{RC4}
+RC4 to szyfr strumieniowy, wymyślony przez Rona Rivesta w 1987 roku. Algorytm opiera się na 256 elementowej tablicy i dwóch wskaźnikach. Początkowo tworzona jest permutacja identycznościowa. Następnie w 256 iteracjach tablica jest przetwarzana i mieszana z bajtami klucza.
+\begin{lstlisting}[style=mystyle, language=java, frame=single, caption = Inicjalizowanie RC4.]
+        String key = Long.toHexString(seed);
+        int j = 0;
+        for(int i = 0; i < 256; i++){
+            j = (j + list.get(i) + (int) key.charAt(i%key.length())) % 256;
+            int tmp = list.get(i);
+            list.set(i, list.get(j));
+            list.set(j, tmp);
+\end{lstlisting}
+Następnie do generowania kolejnych bitów liczby, ponownie tablica jest przetwarzana.
+\begin{lstlisting}[style=mystyle, language=java, frame=single, caption = Generowanie losowego bajtu liczby za pomocą RC4.]
+    private String prga(){
+        int i,j;
+        i = j = 0;
+        for(int k = 0; k < 256; k++) {
+        	i = (i+1) % 256;
+        	j = j + list.get(i) % 256;
+
+        	int tmp = list.get(i);
+        	list.set(i, list.get(j));
+        	list.set(j, tmp);
+        }
+        int t = list.get((i+j)%256);
+        return Integer.toHexString(list.get(t));
+    }
+\end{lstlisting}
+Dużą zaletą tego szyfru jest jego szybkość. Generator znacznie wydajniej generuje bity od liniowych generatorów. 
+%------------------------------------------------------------------- %
+\subsection{Multiply-With-Carry}
+Algorytm wymyślony przez George'a Marsaglia. Jego głównymi zaletami jest szybkość i wysoki okres (od ok. $2^{60} $ do $2^{2000000}$).
+MWC opiera sie na operacji modulo liczby b (zazwyczaj wynosi ona $2^{32}$ dlatego, że w większości komputerów standardowa operacja) 
+Generator wymaga podstawy $b$ mnożnika $a$ , zbioru $x$ losowych wartości takich że r zawiera sie w $b$ i początkowego przeniesienia $c < a$. 
+Algorytm wygląda następująco:
+$$(1)\ t:=a \times x + c $$
+$$(2)\ x:= t \ mod \ b $$
+$$(3)\ c:= (int)\ t/b$$
+Warto zauważyć, że przy arytmetyce $b=2^{32}$ wartość $c$ będzie generowana przez pierwsze 32 bity liczby, natomiast kolejna wartość x przez dolne 32 bity. Mnożnik $a$ jest dobrany w taki sposób aby $ab-1$ i $(ab-1)/2$ były liczbami pierwszymi.
+\newline Generator MWC przechodzi testy statystyczne, których generatory LCG nie przechodzą. Przez ten fakt MWC rozważany był jako algorytm kryptograficznie bezpieczny. Jednak badania pokazują, że bity generowane są lekko stronniczo, co przekreśla go w zastosowaniach kryptograficznych.	
 \section*{Wnioski}
+
 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
