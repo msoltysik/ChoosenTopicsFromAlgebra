@@ -303,7 +303,7 @@ Okres rejestru jest ograniczony przez stopień stowarzyszonego z nim wielomianu 
             list.set(i, list.get(j));
             list.set(j, tmp);
 \end{lstlisting}
-Następnie do generowania kolejnych bitów liczby, ponownie tablica jest przetwarzana.
+Następnie do generowania kolejnych bitów liczby, ponownie tablica jest przetwarzana.\\ Każdy element tablicy jest permutowany conajmniej raz podczas 256 iteracji.
 \begin{lstlisting}[style=mystyle, language=java, frame=single, caption = Generowanie losowego bajtu liczby za pomocą RC4.]
     private String prga(){
         int i,j;
@@ -320,7 +320,7 @@ Następnie do generowania kolejnych bitów liczby, ponownie tablica jest przetwa
         return Integer.toHexString(list.get(t));
     }
 \end{lstlisting}
-Dużą zaletą tego szyfru jest jego szybkość. Generator znacznie wydajniej generuje bity od liniowych generatorów.\\
+Dużą zaletą tego szyfru jest jego szybkość. Generator znacznie wydajniej generuje bity od liniowych generatorów. Algorytm wykorzystywany jest w systemach OpenBSD.\\
 \includegraphics[width=\linewidth]{img/rc4-1.png}
 
 %------------------------------------------------------------------- %
@@ -333,7 +333,7 @@ $$(1)\ t:=a \times x + c $$
 $$(2)\ x:= t \bmod  b $$
 $$(3)\ c:= (int)\ t/b$$
 Warto zauważyć, że przy arytmetyce $b=2^{32}$ wartość $c$ będzie generowana przez pierwsze 32 bity liczby, natomiast kolejna wartość x przez dolne 32 bity. Mnożnik $a$ jest dobrany w taki sposób aby $ab-1$ i $(ab-1)/2$ były liczbami pierwszymi.
-\newline Generator MWC przechodzi testy statystyczne, których generatory LCG nie przechodzą. Przez ten fakt MWC rozważany był jako algorytm kryptograficznie bezpieczny. Jednak badania pokazują, że bity generowane są lekko stronniczo, co przekreśla go w zastosowaniach kryptograficznych.	
+\newline Generator MWC przechodzi testy statystyczne, których generatory LCG nie przechodzą. Przez ten fakt MWC rozważany był jako algorytm kryptograficznie bezpieczny. Jednak badania pokazują, że bity generowane są lekko stronniczo, co przekreśla go w zastosowaniach kryptograficznych. Zostało to naprawione w generatorze CMWC (Complimentary Multiply with Carry).\\
 \includegraphics[width=\linewidth]{img/mwc-1.png}
 
 %----------------------------------------------------------------------------------------
