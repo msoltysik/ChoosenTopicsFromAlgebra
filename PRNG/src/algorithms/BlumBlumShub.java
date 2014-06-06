@@ -12,6 +12,11 @@ public class BlumBlumShub implements IGenerator {
     public BlumBlumShub() {
         seed = System.currentTimeMillis() + System.identityHashCode(new Object());
     }
+
+    public BlumBlumShub(long seed) {
+        this.seed = seed;
+    }
+
     /**
      * @return pseudo-random number between .
      */

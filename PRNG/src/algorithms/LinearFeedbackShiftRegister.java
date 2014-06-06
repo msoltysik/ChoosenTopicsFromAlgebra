@@ -9,10 +9,18 @@ public class LinearFeedbackShiftRegister implements IGenerator {
     private static boolean[] bits = new boolean[M + 1];
     // hard-coded for 32-bits
     private static final int[] TAPS = {1, 2, 22, 32};
+    private final long seed;
 
 
     public LinearFeedbackShiftRegister() {
-        long seed = System.currentTimeMillis() + System.identityHashCode(new Object());
+        this.seed = System.currentTimeMillis() + System.identityHashCode(new Object());
+        for (int i = 0; i < M; i++) {
+            bits[i] = (((1 << i) & seed) >>> i) == 1;
+        }
+    }
+
+    public LinearFeedbackShiftRegister(long seed) {
+        this.seed = seed;
         for (int i = 0; i < M; i++) {
             bits[i] = (((1 << i) & seed) >>> i) == 1;
         }
@@ -26,7 +34,7 @@ public class LinearFeedbackShiftRegister implements IGenerator {
 
     /* generate a random int uniformly on the interval [-2^31 + 1, 2^31 - 1] */
     public long getRandomNumber() {
-    	generateLSFR(System.currentTimeMillis() + System.identityHashCode(new Object()));
+        generateLFSR(System.currentTimeMillis() + System.identityHashCode(new Object()));
         //printBits();
 
         // calculate the integer value from the registers
@@ -49,6 +57,7 @@ public class LinearFeedbackShiftRegister implements IGenerator {
 
         return Math.abs(next);
     }
+
 
     /**
      * returns random double uniformly over [0, 1)

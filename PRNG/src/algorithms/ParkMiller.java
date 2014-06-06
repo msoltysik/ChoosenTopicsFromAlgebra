@@ -17,7 +17,6 @@ public class ParkMiller implements IGenerator {
     }
 
     /**
-     *
      * @param seed number used to initialize a pseudorandom number generator
      */
     public ParkMiller(long seed) {

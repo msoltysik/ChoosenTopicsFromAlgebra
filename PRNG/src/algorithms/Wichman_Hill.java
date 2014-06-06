@@ -15,7 +15,6 @@ public class Wichman_Hill implements IGenerator {
     }
 
     /**
-     *
      * @param seed number used to initialize a pseudorandom number generator
      */
     public Wichman_Hill(long seed) {

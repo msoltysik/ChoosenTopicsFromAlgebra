@@ -12,7 +12,7 @@ public class MersenneTwister implements IGenerator {
     /**
      *
      */
-    public static void initializeGenerator() {
+    public MersenneTwister() {
         MT[0] = (int) (System.currentTimeMillis() + System.identityHashCode(new Object()));
         for (int i = 1; i < 624; i++) {
             MT[i] = (1812433253 * (MT[i - 1] ^ ((MT[i - 1] >> 30) + i)));
@@ -21,10 +21,9 @@ public class MersenneTwister implements IGenerator {
     }
 
     /**
-     *
      * @param seed number used to initialize a pseudorandom number generator
      */
-    public static void initializeGenerator(int seed) {
+    public MersenneTwister(int seed) {
         MT[0] = seed;
         for (int i = 1; i < 624; i++) {
             MT[i] = (1812433253 * (MT[i - 1] ^ ((MT[i - 1] >> 30) + i)));
@@ -49,9 +48,6 @@ public class MersenneTwister implements IGenerator {
      * @return pseudo-random number between 0 and max.
      */
     public long getRandomNumber() {
-        if (!initialized) {
-            initializeGenerator();
-        }
         if (index == 0) {
             generateNumbers();
         }

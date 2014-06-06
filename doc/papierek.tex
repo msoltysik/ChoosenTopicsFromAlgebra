@@ -92,6 +92,7 @@ i analiza ich widma spektralnego.} % Subtitle
 \begin{document}
 
 \maketitle % Print the title section
+\pagebreak
 
 %----------------------------------------------------------------------------------------
 %	ABSTRACT AND KEYWORDS
@@ -100,19 +101,21 @@ i analiza ich widma spektralnego.} % Subtitle
 %\renewcommand{\abstractname}{Summary} % Uncomment to change the name of the abstract to something else
 
 \section*{Wstęp}
-Pseudo-Random Number Generator (PRNG) – program lub podprogram, który na podstawie niewielkiej ilości informacji (ziarno, ang. seed) generuje deterministyczny, potencjalnie nieskończony, ciąg liczb. Generatory liczb pseudolosowych nie generują ciągów prawdziwie losowych - generator inicjowany ziarnem, które może przyjąć $k$ różnych wartości, jest w stanie wyprodukować co najwyżej $k$ różnych ciągów liczb. Ponieważ rozmiar zmiennych reprezentujących wewnętrzny stan generatora jest ograniczony i może on znajdować się tylko w ograniczonej liczbie stanów, po pewnym czasie generator dokona pełnego cyklu i zacznie generować te same wartości. Teoretyczny limit długości cyklu wyrażony jest przez $2^n$, gdzie $n$ to liczba bitów przeznaczonych na przechowywanie stanu wewnętrznego. W praktyce, większość generatorów ma znacznie krótsze okresy.
-\\Pożądane cechy generatorów:
-\begin{enumerate}
-\item trudne do ustalenia ziarno, choć znany jest ciąg wygenerowanych bitów
-\item trudne do ustalenia kolejno generowane bity, choć znany jest ciąg bitów dotychczas wygenerowanych
-\end{enumerate}
-Przykłady zastosowań generatorów liczb pseudolosowych:
+Pseudo-Random Number Generator (PRNG) – program lub podprogram, który na podstawie niewielkiej ilości informacji (ziarno, ang. seed) generuje deterministyczny, potencjalnie nieskończony, ciąg liczb.
+\\Przykłady zastosowań generatorów liczb pseudolosowych:
 \begin{enumerate}
 \item Kryptografia
 \item Całkowanie numeryczne (metoda Monte-Carlo)
 \item Symulacja systemów masowej obsługi
 \item Automaty do gier losowych
 \end{enumerate}
+Generatory liczb pseudolosowych nie generują ciągów prawdziwie loso-wych - generator inicjowany ziarnem, które może przyjąć $k$ różnych wartości, jest w stanie wyprodukować co najwyżej $k$ różnych ciągów liczb. Ponieważ rozmiar zmiennych reprezentujących wewnętrzny stan generatora jest ograniczony i może on znajdować się tylko w ograniczonej liczbie stanów, po pewnym czasie generator dokona pełnego cyklu i zacznie generować te same wartości.
+\\Pożądane cechy generatorów:
+\begin{enumerate}
+\item Trudne do ustalenia ziarno, choć znany jest ciąg wygenerowanych bitów
+\item Trudne do ustalenia kolejno generowane bity, choć znany jest ciąg bitów dotychczas wygenerowanych
+\end{enumerate}
+Teoretyczny limit długości cyklu wyrażony jest przez $2^n$, gdzie $n$ to liczba bitów przeznaczonych na przechowywanie stanu wewnętrznego. W praktyce, większość generatorów ma znacznie krótsze okresy.
 W tej pracy przedstawiamy opis, zasadę działania oraz analizę widma spektralnego wymienionych algorytmów:
 \begin{enumerate}
 \item Blum Blum Shub
@@ -125,7 +128,6 @@ W tej pracy przedstawiamy opis, zasadę działania oraz analizę widma spektraln
 \item RC4
 \item Multiply-With-Carry
 \end{enumerate}
-todo
 \pagebreak
 %----------------------------------------------------------------------------------------
 \section{Opis i analiza algorytmów PRNG}
@@ -184,16 +186,16 @@ bardzo szybko staje się okresowy. Cechą tych generatorów jest również fakt,
 \end{enumerate}
 
 \begin{lstlisting}[style=mystyle, language=java, frame=single, caption = Generowanie następnej liczby pseudolosowej przez LCG]
-private final static long a = 25173;
-private final static long b = 13849;
-private final static long m = 32768;
+private final static long a = 6364136223846793005L;
+private final static long b = 1442695040888963407L;
+private final static long m = (long) Math.pow(2, 64);
 
 public static long getRandomNumber() {
     seed = (a * seed + b) % m;
     return seed;
 }
 \end{lstlisting}
-\includegraphics[width=\linewidth]{img/lcg-1.png}
+\includegraphics[width=\linewidth]{img/lcg-2.png}
 %----------------------------------------------------------------------------------------
 \subsection{Mersenne twister}
 
@@ -257,9 +259,10 @@ znanego także jako rekursja Zeisela.
         return Math.abs(seed);
     }
 \end{lstlisting}
+\includegraphics[width=\linewidth]{img/wh-1.png}
 
 \subsection{Linear feedback shift register}
-Linear feedback shift register albo inaczej Rejestr przesuwający z liniowym sprzężeniem zwrotnym to generator, którego bit wejściowy jest funkcją jego poprzedniego stanu. Wartość początkowa rejestru jest jego ziarnem. Następnie ustalone funkcje konkretnych komórek rejestru XORują wynik bitu wychodzącego.
+\textit{Linear feedback shift register} albo inaczej Rejestr przesuwający z liniowym sprzężeniem zwrotnym to generator, którego bit wejściowy jest funkcją jego poprzedniego stanu. Wartość początkowa rejestru jest jego ziarnem. Następnie ustalone funkcje konkretnych komórek rejestru XORują wynik bitu wychodzącego.
 \begin{lstlisting}[style=mystyle, language=java, frame=single, caption = generowanie liczby za pomocą LFSR i przesuwanie komórek.] 
         // wygeneruj liczbe losowa
         int next = 0;
@@ -285,10 +288,12 @@ Linear feedback shift register albo inaczej Rejestr przesuwający z liniowym spr
 Jak widzimy na powyższym listingu liczba generowana jest za pomocą obecnych stanów tablicy. Po wylosowaniu wyrzucany jest ostatni bit i jest xorowany z określonymi przez nas komórkami. Następnie tablica jest przesuwana o 1. \newline
 Każdy LFSR jest związany z określonym wielomianem z pierścienia wielomianów R[t], gdzie R jest ciałem skończonym $Z_2$.
 Okres rejestru jest ograniczony przez stopień stowarzyszonego z nim wielomianu i wynosi maksymalnie $2^d - 1$, gdzie d jest stopniem wielomianu (ciało ${Z}_2$ ma charakterystykę równą 2). Okres danego LFSR jest maksymalny jeżeli stowarzyszony z nim wielomian jest wielomianem pierwotnym. Rejestr taki, nazywamy rejestrem maksymalnej długości.
-\newline Zaletą LFSR jest niesamowita szybkość wynikająca z operacji logicznych przez co znalazł on zastosowanie w szyfrach strumieniowych. 
+\newline Zaletą LFSR jest niesamowita szybkość wynikająca z operacji logicznych przez co znalazł on zastosowanie w szyfrach strumieniowych.\\
+\includegraphics[width=\linewidth]{img/lfsr-1.png}
+
 %---------------------------------------------------------------------------------------- %
 \subsection{RC4}
-RC4 to szyfr strumieniowy, wymyślony przez Rona Rivesta w 1987 roku. Algorytm opiera się na 256 elementowej tablicy i dwóch wskaźnikach. Początkowo tworzona jest permutacja identycznościowa. Następnie w 256 iteracjach tablica jest przetwarzana i mieszana z bajtami klucza.
+\textit{RC4} to szyfr strumieniowy, wymyślony przez Rona Rivesta w 1987 roku. Algorytm opiera się na 256 elementowej tablicy i dwóch wskaźnikach. Początkowo tworzona jest permutacja identycznościowa. Następnie w 256 iteracjach tablica jest przetwarzana i mieszana z bajtami klucza.
 \begin{lstlisting}[style=mystyle, language=java, frame=single, caption = Inicjalizowanie RC4.]
         String key = Long.toHexString(seed);
         int j = 0;
@@ -315,7 +320,9 @@ Następnie do generowania kolejnych bitów liczby, ponownie tablica jest przetwa
         return Integer.toHexString(list.get(t));
     }
 \end{lstlisting}
-Dużą zaletą tego szyfru jest jego szybkość. Generator znacznie wydajniej generuje bity od liniowych generatorów. 
+Dużą zaletą tego szyfru jest jego szybkość. Generator znacznie wydajniej generuje bity od liniowych generatorów.\\
+\includegraphics[width=\linewidth]{img/rc4-1.png}
+
 %------------------------------------------------------------------- %
 \subsection{Multiply-With-Carry}
 Algorytm wymyślony przez George'a Marsaglia. Jego głównymi zaletami jest szybkość i wysoki okres (od ok. $2^{60} $ do $2^{2000000}$).
@@ -327,11 +334,11 @@ $$(2)\ x:= t \bmod  b $$
 $$(3)\ c:= (int)\ t/b$$
 Warto zauważyć, że przy arytmetyce $b=2^{32}$ wartość $c$ będzie generowana przez pierwsze 32 bity liczby, natomiast kolejna wartość x przez dolne 32 bity. Mnożnik $a$ jest dobrany w taki sposób aby $ab-1$ i $(ab-1)/2$ były liczbami pierwszymi.
 \newline Generator MWC przechodzi testy statystyczne, których generatory LCG nie przechodzą. Przez ten fakt MWC rozważany był jako algorytm kryptograficznie bezpieczny. Jednak badania pokazują, że bity generowane są lekko stronniczo, co przekreśla go w zastosowaniach kryptograficznych.	
-
+\includegraphics[width=\linewidth]{img/mwc-1.png}
 
 %----------------------------------------------------------------------------------------
 
-\section*{Wnioski}
+%\section*{Wnioski}
 
 
 %----------------------------------------------------------------------------------------

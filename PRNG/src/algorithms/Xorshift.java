@@ -16,7 +16,6 @@ public class Xorshift implements IGenerator {
     }
 
     /**
-     *
      * @param seed number used to initialize a pseudorandom number generator
      */
     public Xorshift(long seed) {

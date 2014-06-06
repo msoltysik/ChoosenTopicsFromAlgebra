@@ -8,20 +8,9 @@ import java.util.List;
 @SuppressWarnings("UnusedDeclaration")
 
 public class RC4PRGA implements IGenerator {
+    long seed = System.currentTimeMillis() + System.identityHashCode(new Object());
     private List<Integer> list = new ArrayList<>();
 
-
-    private void init() {
-        long seed = System.currentTimeMillis() + System.identityHashCode(new Object());
-        String key = Long.toHexString(seed);
-        int j = 0;
-        for(int i = 0; i < 256; i++){
-            j = (j + list.get(i) + (int) key.charAt(i%key.length())) % 256;
-            int tmp = list.get(i);
-            list.set(i, list.get(j));
-            list.set(j, tmp);
-        }
-    }
 
     public RC4PRGA() {
         for (int i = 0; i < 256; i++) {
@@ -31,17 +20,38 @@ public class RC4PRGA implements IGenerator {
         java.util.Collections.shuffle(list);
         init();
     }
-    private String prga(){
-        int i,j;
+
+    public RC4PRGA(long seed) {
+        this.seed = seed;
+        for (int i = 0; i < 256; i++) {
+            list.add(i);
+        }
+        java.util.Collections.shuffle(list);
+        init();
+    }
+
+    private void init() {
+        String key = Long.toHexString(seed);
+        int j = 0;
+        for (int i = 0; i < 256; i++) {
+            j = (j + list.get(i) + (int) key.charAt(i % key.length())) % 256;
+            int tmp = list.get(i);
+            list.set(i, list.get(j));
+            list.set(j, tmp);
+        }
+    }
+
+    private String prga() {
+        int i, j;
         i = j = 0;
 
-        i = (i+1) % 256;
+        i = (i + 1) % 256;
         j = j + list.get(i) % 256;
 
         int tmp = list.get(i);
         list.set(i, list.get(j));
         list.set(j, tmp);
-        int t = list.get((i+j)%256);
+        int t = list.get((i + j) % 256);
         return Integer.toHexString(list.get(t));
     }
 
@@ -49,11 +59,11 @@ public class RC4PRGA implements IGenerator {
         init();
         String nextpart;
         String out = "";
-        for(int i = 0; i < 7; i++){
+        for (int i = 0; i < 7; i++) {
             nextpart = prga();
             out = out + nextpart;
         }
-        return Long.parseLong(out,16);
+        return Long.parseLong(out, 16);
     }
 
     public long getRandomNumber(long maxValue) {

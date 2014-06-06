@@ -24,7 +24,7 @@ class SpektralneGUI(QtGui.QWidget):
 
         self.titleEdit.addItems(
             ["BlumBlumShub", "LinearCongruentialGenerator", "LinearFeedbackShiftRegister", "MersenneTwister",
-             "MultiplyWithCarry", "ParkMiller", "Wichman_Hill", "Xorshift"
+             "MultiplyWithCarry", "ParkMiller", "Wichman_Hill", "Xorshift", "RC4PRGA",
              ])
         self.titleEdit.setCurrentRow(0)
 

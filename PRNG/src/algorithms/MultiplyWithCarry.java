@@ -7,20 +7,24 @@ public class MultiplyWithCarry implements IGenerator {
 
     private long c = 3912021;
 
-    private long x;
+    private long seed;
 
     public MultiplyWithCarry() {
-        x = System.currentTimeMillis() + System.identityHashCode(new Object());
+        seed = System.currentTimeMillis() + System.identityHashCode(new Object());
+    }
+
+    public MultiplyWithCarry(long seed) {
+        this.seed = seed;
     }
 
 
     public long getRandomNumber() {
         long a = 0xffffda61L;
-        long t = a * x + c;
+        long t = a * seed + c;
         long b = 0xffffffffL;
-        x = t % b;
+        seed = t % b;
         c = t / b;
-        return Math.abs(x);
+        return Math.abs(seed);
 
     }
 
