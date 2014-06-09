@@ -339,16 +339,29 @@ Warto zauważyć, że przy arytmetyce $b=2^{32}$ wartość $c$ będzie generowan
 
 %------------------------------------------------------------------------------------------------ %
 	
-
-    \subsection{Lagged-Fibonacci-Generator}
-    Generator Fibonacciego jest jednym z wielu wariantów uogólnionego generatora liniowego liczb losowych. \\
-    Generator korzysta z ciągu Fibonacciego, stąd wzór:
-    $X_{n}=X_{n-1}+X_{n-2}$ \textit{mod m}
-    Generator Fibonacciego ma dużo lepsze parametry jakościowe od innych generatorów liniowych, ale wymaga dużo większego nakładu obliczeń przy generacji, co wiąże się z czasem. Wadą tego generatora są duże korelacje między wyrazami ciągu. Ciągi te spełniają warunek rozkładu, ale nie spełniają warunku niezależności.
-
+\subsection{Lagged-Fibonacci-Generator}
+Generator Fibonacciego jest jednym z wielu wariantów uogólnionego generatora liniowego liczb losowych. \\
+Generator korzysta z ciągu Fibonacciego, stąd wzór:
+$X_{n}=X_{n-1}+X_{n-2}$ \textit{mod m}
+Generator Fibonacciego ma dużo lepsze parametry jakościowe od innych generatorów liniowych, ale wymaga dużo większego nakładu obliczeń przy generacji, co wiąże się z czasem. Wadą tego generatora są duże korelacje między wyrazami ciągu. Ciągi te spełniają warunek rozkładu, ale nie spełniają warunku niezależności.
 
 %----------------------------------------------------------------------------------------
+\subsection{Complementary Multiply-with-Carry}
+Algorytm stworzony przez Georga Marsaglię w 2002 wprowadza usprawnienia
+do jego wcześniejszego algorytmu \textit{Multiply-With-Carry}.\\
+Z powodu bardzo dużego okresu i własności statystycznych jest
+uważany za jeden z najefektywniejszych algorytmów na dzień dzisiejszy.
+\textit{CMWC} jest prostą modyfikacją algorytmu \textit{LCG}, z tą różnicą, że \textit{CMWC}
+przenosi aktualną wartość PRN za pomocą funkcji podłogi i
+działania modulo. \\Osłabia to występowanie seryjnych sekwencji.\\
+Algorytm jest dany wzorem:
 
+$$X_{n}=(m-1) - ((aX_{n-r} + C_{n-1}) \% m)$$
+$$C_{n}=\lfloor \frac{aX_{n-r} + C_{n-1}}{m} \rfloor$$
+$$m = 2^{32}-1$$
+$$p=ab^{r}-1$$
+
+%----------------------------------------------------------------------------------------
 %\section*{Wnioski}
 
 
